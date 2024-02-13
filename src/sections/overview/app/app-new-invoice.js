@@ -30,7 +30,7 @@ export default function AppNewInvoice({ title, subheader, tableData, tableLabels
 
       <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
-          <Table sx={{ minWidth: 680 }}>
+          <Table>
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
@@ -50,7 +50,7 @@ export default function AppNewInvoice({ title, subheader, tableData, tableLabels
           color="inherit"
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
         >
-          View All
+          View All Products
         </Button>
       </Box>
     </Card>
@@ -92,24 +92,21 @@ function AppNewInvoiceRow({ row }) {
   return (
     <>
       <TableRow>
-        <TableCell>{row.invoiceNumber}</TableCell>
-
-        <TableCell>{row.category}</TableCell>
-
-        <TableCell>{fCurrency(row.price)}</TableCell>
 
         <TableCell>
           <Label
             variant="soft"
             color={
-              (row.status === 'progress' && 'warning') ||
-              (row.status === 'out of date' && 'error') ||
+              (row.status === 'Pending' && 'warning') ||
+              (row.status === 'Rejected' && 'error') ||
               'success'
             }
           >
             {row.status}
           </Label>
         </TableCell>
+
+        <TableCell>{row.category}</TableCell>
 
         <TableCell align="right" sx={{ pr: 1 }}>
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>

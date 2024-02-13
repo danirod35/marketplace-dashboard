@@ -11,10 +11,16 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 
 import { fDateTime } from 'src/utils/format-time';
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+
+import ShopifyLogo from "../../../assets/images/ShopifyLogoAvatar.png";
+import Image from 'next/image'
 
 // ----------------------------------------------------------------------
 
 export default function AnalyticsOrderTimeline({ title, subheader, list, ...other }) {
+
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -23,6 +29,7 @@ export default function AnalyticsOrderTimeline({ title, subheader, list, ...othe
         sx={{
           m: 0,
           p: 3,
+          pb: 1,
           [`& .${timelineItemClasses.root}:before`]: {
             flex: 0,
             padding: 0,
@@ -50,15 +57,16 @@ function OrderItem({ item, lastTimeline }) {
   return (
     <TimelineItem>
       <TimelineSeparator>
-        <TimelineDot
-          color={
-            (type === 'order1' && 'primary') ||
-            (type === 'order2' && 'success') ||
-            (type === 'order3' && 'info') ||
-            (type === 'order4' && 'warning') ||
-            'error'
-          }
-        />
+        <Avatar
+          variant="rounded"
+          sx={{
+            width: 48,
+            height: 48,
+            bgcolor: 'background.neutral',
+          }}
+        >
+          <Box component="img" src="../../../assets/images/ShopifyLogoAvatar.png" sx={{ width: 24, height: 24 }} />
+        </Avatar>
         {lastTimeline ? null : <TimelineConnector />}
       </TimelineSeparator>
 

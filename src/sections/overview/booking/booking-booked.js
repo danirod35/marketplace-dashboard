@@ -34,7 +34,7 @@ export default function BookingBooked({ title, subheader, data, ...other }) {
               value={progress.value}
               color={
                 (progress.status === 'Pending' && 'warning') ||
-                (progress.status === 'Canceled' && 'error') ||
+                (progress.status === 'Rejected' && 'error') ||
                 'success'
               }
               sx={{

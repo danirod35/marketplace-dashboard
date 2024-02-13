@@ -76,7 +76,7 @@ function CarouselItem({ item }) {
         }}
       >
         <Typography variant="overline" sx={{ opacity: 0.48 }}>
-          New
+          Blog & News
         </Typography>
 
         <Typography noWrap variant="h5" sx={{ mt: 1, mb: 3 }}>
@@ -84,7 +84,7 @@ function CarouselItem({ item }) {
         </Typography>
 
         <Button color="primary" variant="contained">
-          Buy Now
+          Read
         </Button>
       </CardContent>
 
