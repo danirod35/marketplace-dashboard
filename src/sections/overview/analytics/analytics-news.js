@@ -32,7 +32,7 @@ export default function AnalyticsNews({ title, subheader, list, ...other }) {
           color="inherit"
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
         >
-          View All
+          View All Products
         </Button>
       </Box>
     </Card>
@@ -58,34 +58,18 @@ function NewsItem({ news }) {
       sx={{
         py: 2,
         px: 3,
-        minWidth: 640,
         borderBottom: (theme) => `dashed 1px ${theme.palette.divider}`,
       }}
     >
-      <Avatar
-        variant="rounded"
-        alt={title}
-        src={coverUrl}
-        sx={{ width: 48, height: 48, flexShrink: 0 }}
-      />
 
       <ListItemText
         primary={title}
-        secondary={description}
         primaryTypographyProps={{
           noWrap: true,
           typography: 'subtitle2',
         }}
-        secondaryTypographyProps={{
-          mt: 0.5,
-          noWrap: true,
-          component: 'span',
-        }}
       />
 
-      <Box sx={{ flexShrink: 0, color: 'text.disabled', typography: 'caption' }}>
-        {fToNow(postedAt)}
-      </Box>
     </Stack>
   );
 }

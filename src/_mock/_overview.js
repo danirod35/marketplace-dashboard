@@ -46,15 +46,13 @@ export const _appAuthors = [...Array(3)].map((_, index) => ({
   totalFavorites: _mock.number.nativeL(index),
 }));
 
-export const _appInvoices = [...Array(5)].map((_, index) => {
-  const category = ['Android', 'Mac', 'Windows', 'Android', 'Mac'][index];
+export const _appInvoices = [...Array(3)].map((_, index) => {
+  const category = ['12', '14', '12'][index];
 
-  const status = ['paid', 'out of date', 'progress', 'paid', 'paid'][index];
+  const status = ['Active', 'Pending', 'Rejected'][index];
 
   return {
     id: _mock.id(index),
-    invoiceNumber: `INV-199${index}`,
-    price: _mock.number.price(index),
     category,
     status,
   };
@@ -75,7 +73,7 @@ export const _analyticTasks = [...Array(5)].map((_, index) => ({
   name: _mock.taskNames(index),
 }));
 
-export const _analyticPosts = [...Array(5)].map((_, index) => ({
+export const _analyticPosts = [...Array(3)].map((_, index) => ({
   id: _mock.id(index),
   postedAt: _mock.time(index),
   title: _mock.postTitle(index),
@@ -83,13 +81,14 @@ export const _analyticPosts = [...Array(5)].map((_, index) => ({
   description: _mock.sentence(index),
 }));
 
-export const _analyticOrderTimeline = [...Array(5)].map((_, index) => {
+export const _analyticOrderTimeline = [...Array(6)].map((_, index) => {
   const title = [
-    '1983, orders, $4220',
-    '12 Invoices have been paid',
-    'Order #37745 from September',
-    'New order placed #XF-2356',
-    'New order placed #XF-2346',
+    'New order #1836234',
+    'New order #1836234',
+    'New order #1836234',
+    'New order #1836234',
+    'New order #1836234',
+    'New order #1836234',
   ][index];
 
   return {
@@ -173,7 +172,7 @@ export const _ecommerceLatestProducts = [...Array(5)].map((_, index) => {
   };
 });
 
-export const _ecommerceNewProducts = [...Array(5)].map((_, index) => ({
+export const _ecommerceNewProducts = [...Array(3)].map((_, index) => ({
   id: _mock.id(index),
   name: _mock.productName(index),
   coverUrl: _mock.image.product(index),
@@ -277,8 +276,8 @@ export const _bankingRecentTransitions = [
 // BOOKING
 // ----------------------------------------------------------------------
 
-export const _bookings = [...Array(5)].map((_, index) => {
-  const status = ['Paid', 'Paid', 'Pending', 'Cancelled', 'Paid'][index];
+export const _bookings = [...Array(3)].map((_, index) => {
+  const status = ['Active', 'Pending', 'Rejected'][index];
 
   const customer = {
     avatarUrl: _mock.image.avatar(index),
@@ -302,9 +301,9 @@ export const _bookings = [...Array(5)].map((_, index) => {
 });
 
 export const _bookingsOverview = [...Array(3)].map((_, index) => ({
-  status: ['Pending', 'Canceled', 'Sold'][index],
-  quantity: _mock.number.nativeL(index),
-  value: _mock.number.percent(index),
+  status: ['Active', 'Rejected', 'Pending'][index],
+  quantity: [8, 10, 2][index],
+  value: [50, 10, 40][index],
 }));
 
 export const _bookingReview = [...Array(5)].map((_, index) => ({

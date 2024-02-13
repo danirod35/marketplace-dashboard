@@ -7,12 +7,18 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import { MotivationIllustration } from 'src/assets/illustrations';
+import {CheckInIllustration, MotivationIllustration} from 'src/assets/illustrations';
 import {
   _ecommerceNewProducts,
   _ecommerceBestSalesman,
   _ecommerceSalesOverview,
   _ecommerceLatestProducts,
+  _analyticOrderTimeline,
+  _bookingsOverview,
+  _appInvoices,
+  _appRelated,
+  _analyticPosts,
+  _appFeatured,
 } from 'src/_mock';
 
 import { useSettingsContext } from 'src/components/settings';
@@ -26,6 +32,15 @@ import EcommerceSalesOverview from '../ecommerce-sales-overview';
 import EcommerceWidgetSummary from '../ecommerce-widget-summary';
 import EcommerceLatestProducts from '../ecommerce-latest-products';
 import EcommerceCurrentBalance from '../ecommerce-current-balance';
+import AnalyticsOrderTimeline from "../../analytics/analytics-order-timeline";
+import BookingBooked from "../../booking/booking-booked";
+import AppNewInvoice from "../../app/app-new-invoice";
+import AppTopRelated from "../../app/app-top-related";
+import AnalyticsNews from "../../analytics/analytics-news";
+import AppFeatured from "../../app/app-featured";
+import Stack from "@mui/material/Stack";
+import AppWidget from "../../app/app-widget";
+import BookingWidgetSummary from "../../booking/booking-widget-summary";
 
 // ----------------------------------------------------------------------
 
@@ -41,26 +56,26 @@ export default function OverviewEcommerceView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <EcommerceWelcome
-            title={`Congratulations! \n ${user?.displayName}`}
-            description="Best seller of the month You have done 57.6% more sales today."
+            title={`Welcome to the \n HeyBuddy Shop!`}
+            description="Discover a new audience, sell more, and make pet parenthood easier!"
             img={<MotivationIllustration />}
             action={
               <Button variant="contained" color="primary">
-                Go Now
+                Learn More
               </Button>
             }
           />
         </Grid>
 
         <Grid xs={12} md={4}>
-          <EcommerceNewProducts list={_ecommerceNewProducts} />
+          <AppFeatured list={_appFeatured} />
         </Grid>
 
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
-            title="Product Sold"
+            title="Sales"
             percent={2.6}
-            total={765}
+            total={76000}
             chart={{
               series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
             }}
@@ -69,9 +84,9 @@ export default function OverviewEcommerceView() {
 
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
-            title="Total Balance"
+            title="Orders"
             percent={-0.1}
-            total={18765}
+            total={500}
             chart={{
               colors: [theme.palette.info.light, theme.palette.info.main],
               series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
@@ -81,7 +96,7 @@ export default function OverviewEcommerceView() {
 
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
-            title="Sales Profit"
+            title="Sessions"
             percent={0.6}
             total={4876}
             chart={{
@@ -92,21 +107,12 @@ export default function OverviewEcommerceView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <EcommerceSaleByGender
-            title="Sale By Gender"
-            total={2324}
-            chart={{
-              series: [
-                { label: 'Mens', value: 44 },
-                { label: 'Womens', value: 75 },
-              ],
-            }}
-          />
+          <AnalyticsOrderTimeline title="Orders Overview" list={_analyticOrderTimeline} />
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
           <EcommerceYearlySales
-            title="Yearly Sales"
+            title="Sales Overview"
             subheader="(+43%) than last year"
             chart={{
               categories: [
@@ -125,28 +131,20 @@ export default function OverviewEcommerceView() {
               ],
               series: [
                 {
-                  year: '2019',
+                  year: 'Today',
                   data: [
                     {
-                      name: 'Total Income',
+                      name: 'Total Sales',
                       data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
-                    },
-                    {
-                      name: 'Total Expenses',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
                     },
                   ],
                 },
                 {
-                  year: '2020',
+                  year: 'Yesterday',
                   data: [
                     {
-                      name: 'Total Income',
+                      name: 'Total Sales',
                       data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
-                    },
-                    {
-                      name: 'Total Expenses',
-                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
                     },
                   ],
                 },
@@ -155,35 +153,22 @@ export default function OverviewEcommerceView() {
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
-          <EcommerceSalesOverview title="Sales Overview" data={_ecommerceSalesOverview} />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={4}>
-          <EcommerceCurrentBalance
-            title="Current Balance"
-            currentBalance={187650}
-            sentAmount={25500}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
-          <EcommerceBestSalesman
-            title="Best Salesman"
-            tableData={_ecommerceBestSalesman}
+        <Grid xs={12} lg={4}>
+          <AppNewInvoice
+            title="Product Status"
+            tableData={_appInvoices}
             tableLabels={[
-              { id: 'name', label: 'Seller' },
-              { id: 'category', label: 'Product' },
-              { id: 'country', label: 'Country', align: 'center' },
-              { id: 'totalAmount', label: 'Total', align: 'right' },
-              { id: 'rank', label: 'Rank', align: 'right' },
+              { id: 'status', label: 'Status' },
+              { id: 'category', label: 'Quantity' },
+              { id: '' },
             ]}
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
-          <EcommerceLatestProducts title="Latest Products" list={_ecommerceLatestProducts} />
+        <Grid xs={12} md={8}>
+          <BookingWidgetSummary title="Shopify Connection" total='Connected' icon={<CheckInIllustration />} />
         </Grid>
+
       </Grid>
     </Container>
   );

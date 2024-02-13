@@ -153,15 +153,13 @@ export default function OverviewAppView() {
           />
         </Grid>
 
-        <Grid xs={12} lg={8}>
+        <Grid xs={12} lg={4}>
           <AppNewInvoice
-            title="New Invoice"
+            title="Product Status"
             tableData={_appInvoices}
             tableLabels={[
-              { id: 'id', label: 'Invoice ID' },
-              { id: 'category', label: 'Category' },
-              { id: 'price', label: 'Price' },
               { id: 'status', label: 'Status' },
+              { id: 'category', label: 'Quantity' },
               { id: '' },
             ]}
           />

@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
@@ -21,8 +24,11 @@ export default function BookingWidgetSummary({ title, total, icon, sx, ...other 
       {...other}
     >
       <Box>
-        <Box sx={{ mb: 1, typography: 'h3' }}>{fShortenNumber(total)}</Box>
+        <Box sx={{ mb: 2, typography: 'h5' }}>{total}</Box>
         <Box sx={{ color: 'text.secondary', typography: 'subtitle2' }}>{title}</Box>
+        <FormGroup>
+          <FormControlLabel control={<Switch defaultChecked />} label="Toggle Store Status" />
+        </FormGroup>
       </Box>
 
       <Box
@@ -44,5 +50,5 @@ BookingWidgetSummary.propTypes = {
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   sx: PropTypes.object,
   title: PropTypes.string,
-  total: PropTypes.number,
+  total: PropTypes.string,
 };
