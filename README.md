@@ -1,2 +1,0 @@
-# marketplace-dashboard
-Marketplace Dashboard
