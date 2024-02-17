@@ -136,7 +136,7 @@ export default function PostListView() {
           mb: { xs: 3, md: 5 },
         }}
       >
-        {['all', 'published', 'draft'].map((tab) => (
+        {['all', 'active', 'draft'].map((tab) => (
           <Tab
             key={tab}
             iconPosition="end"
@@ -145,11 +145,11 @@ export default function PostListView() {
             icon={
               <Label
                 variant={((tab === 'all' || tab === filters.publish) && 'filled') || 'soft'}
-                color={(tab === 'published' && 'info') || 'default'}
+                color={(tab === 'active' && 'info') || 'default'}
               >
                 {tab === 'all' && posts.length}
 
-                {tab === 'published' && posts.filter((post) => post.publish === 'published').length}
+                {tab === 'active' && posts.filter((post) => post.publish === 'active').length}
 
                 {tab === 'draft' && posts.filter((post) => post.publish === 'draft').length}
               </Label>

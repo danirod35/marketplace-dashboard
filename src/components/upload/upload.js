@@ -14,6 +14,7 @@ import Iconify from '../iconify';
 import MultiFilePreview from './preview-multi-file';
 import RejectionFiles from './errors-rejection-files';
 import SingleFilePreview from './preview-single-file';
+import {fData} from "../../utils/format-number";
 
 // ----------------------------------------------------------------------
 
@@ -48,9 +49,9 @@ export default function Upload({
 
   const renderPlaceholder = (
     <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
-      <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
+      <UploadIllustration sx={{ width: 1, maxWidth: 100 }} />
       <Stack spacing={1} sx={{ textAlign: 'center' }}>
-        <Typography variant="h6">Drop or Select file</Typography>
+        <Typography variant="h6">Upload Storefront Banner Image</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           Drop files here or click
           <Box
@@ -65,6 +66,19 @@ export default function Upload({
           </Box>
           thorough your machine
         </Typography>
+          <Typography
+              variant="caption"
+              sx={{
+                  mt: 1,
+                  mx: 'auto',
+                  display: 'block',
+                  textAlign: 'center',
+                  color: 'text.disabled',
+              }}
+          >
+              Allowed *.jpeg, *.jpg, *.png, *.gif
+              <br /> (2000 x 2000)
+          </Typography>
       </Stack>
     </Stack>
   );
@@ -99,7 +113,7 @@ export default function Upload({
         <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
       </Box>
 
-      <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+      <Stack direction="row" justifyContent="flex" spacing={1.5}>
         {onRemoveAll && (
           <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
             Remove All
@@ -125,7 +139,7 @@ export default function Upload({
       <Box
         {...getRootProps()}
         sx={{
-          p: 5,
+          p: 2,
           outline: 'none',
           borderRadius: 1,
           cursor: 'pointer',

@@ -48,7 +48,7 @@ export default function JobDetailsToolbar({
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {publish === 'published' && (
+        {publish === 'active' && (
           <Tooltip title="Go Live">
             <IconButton component={RouterLink} href={liveLink}>
               <Iconify icon="eva:external-link-fill" />
@@ -90,7 +90,7 @@ export default function JobDetailsToolbar({
               onChangePublish(option.value);
             }}
           >
-            {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
+            {option.value === 'active' && <Iconify icon="eva:cloud-upload-fill" />}
             {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
             {option.label}
           </MenuItem>

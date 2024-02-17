@@ -24,7 +24,7 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useGetProducts } from 'src/api/product';
-import { PRODUCT_STOCK_OPTIONS } from 'src/_mock';
+import {PRODUCT_PUBLISH_OPTIONS, PRODUCT_STOCK_OPTIONS} from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -45,9 +45,48 @@ import {
 
 // ----------------------------------------------------------------------
 
+const mockProducts = [
+  {
+    id: 1,
+    name: 'Product A',
+    createdAt: 'Accessories',
+    available: 75,
+    inventoryType: 'In Stock',
+    price: 49.99,
+    status: 'active',
+  },
+  {
+    id: 2,
+    name: 'Product B',
+    createdAt: 'Accessories',
+    available: 75,
+    inventoryType: 'Out of Stock',
+    price: 29.99,
+    status: 'pending',
+  },
+  {
+    id: 3,
+    name: 'Product C',
+    createdAt: 'Accessories',
+    available: 75,
+    inventoryType: 'In Stock',
+    price: 39.99,
+    status: 'rejected',
+  },
+  {
+    id: 4,
+    name: 'Product D',
+    createdAt: 'Accessories',
+    available: 75,
+    inventoryType: 'Out of Stock',
+    price: 59.99,
+    status: 'active',
+  },
+];
+
 const PUBLISH_OPTIONS = [
-  { value: 'published', label: 'Published' },
-  { value: 'draft', label: 'Draft' },
+  { value: 'active', label: 'Active' },
+  { value: 'hehe', label: 'hehe' },
 ];
 
 const defaultFilters = {
@@ -141,11 +180,6 @@ export default function ProductListView() {
 
   const columns = [
     {
-      field: 'category',
-      headerName: 'Category',
-      filterable: false,
-    },
-    {
       field: 'name',
       headerName: 'Product',
       flex: 1,
@@ -155,7 +189,7 @@ export default function ProductListView() {
     },
     {
       field: 'createdAt',
-      headerName: 'Create at',
+      headerName: 'Category',
       width: 160,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
@@ -175,8 +209,8 @@ export default function ProductListView() {
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: 'publish',
-      headerName: 'Publish',
+      field: 'status',
+      headerName: 'Status',
       width: 110,
       type: 'singleSelect',
       editable: true,
@@ -186,9 +220,9 @@ export default function ProductListView() {
     {
       type: 'actions',
       field: 'actions',
-      headerName: ' ',
-      align: 'right',
-      headerAlign: 'right',
+      headerName: 'Actions',
+      align: 'center',
+      headerAlign: 'left',
       width: 80,
       sortable: false,
       filterable: false,
@@ -251,7 +285,7 @@ export default function ProductListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New Product
+              Import Products
             </Button>
           }
           sx={{
@@ -264,7 +298,7 @@ export default function ProductListView() {
 
         <Card
           sx={{
-            height: { xs: 800, md: 2 },
+            height: 'xl',
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -273,7 +307,7 @@ export default function ProductListView() {
           <DataGrid
             checkboxSelection
             disableRowSelectionOnClick
-            rows={dataFiltered}
+            rows={mockProducts}
             columns={columns}
             loading={productsLoading}
             getRowHeight={() => 'auto'}
@@ -336,7 +370,7 @@ export default function ProductListView() {
                   )}
                 </>
               ),
-              noRowsOverlay: () => <EmptyContent title="No Data" />,
+              noRowsOverlay: () => <EmptyContent title="Import products to get started." />,
               noResultsOverlay: () => <EmptyContent title="No results found" />,
             }}
             slotProps={{

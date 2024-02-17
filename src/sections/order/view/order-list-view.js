@@ -21,7 +21,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { isAfter, isBetween } from 'src/utils/format-time';
 
-import { _orders, ORDER_STATUS_OPTIONS } from 'src/_mock';
+import { ORDER_STATUS_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -45,6 +45,42 @@ import OrderTableRow from '../order-table-row';
 import OrderTableToolbar from '../order-table-toolbar';
 import OrderTableFiltersResult from '../order-table-filters-result';
 
+const _orders = [
+  {
+    "id": 1,
+    "orderNumber": "ORD-1",
+    "name": "John Doe",
+    "createdAt": "2023-10-20T10:30:00Z",
+    "totalQuantity": 3,
+    "totalAmount": 120.5,
+    "status": "fulfilled",
+    "customer": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "avatarUrl": "https://randomuser.me/api/portraits/thumb/1.jpg"
+    },
+    "items": [
+      {
+        "id": 1,
+        "name": "Product A",
+        "sku": "SKU-A",
+        "quantity": 1,
+        "price": 50.0,
+        "coverUrl": "https://picsum.photos/id/1/200/200"
+      },
+      {
+        "id": 2,
+        "name": "Product B",
+        "sku": "SKU-B",
+        "quantity": 2,
+        "price": 35.5,
+        "coverUrl": "https://picsum.photos/id/2/200/200"
+      }
+    ]
+  },
+];
+
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...ORDER_STATUS_OPTIONS];
@@ -54,7 +90,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Customer' },
   { id: 'createdAt', label: 'Date', width: 140 },
   { id: 'totalQuantity', label: 'Items', width: 120, align: 'center' },
-  { id: 'totalAmount', label: 'Price', width: 140 },
+  { id: 'totalAmount', label: 'Total', width: 140 },
   { id: 'status', label: 'Status', width: 110 },
   { id: '', width: 88 },
 ];
@@ -96,8 +132,6 @@ export default function OrderListView() {
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
-
-  const denseHeight = table.dense ? 56 : 56 + 20;
 
   const canReset =
     !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
@@ -201,13 +235,12 @@ export default function OrderListView() {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'completed' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'cancelled' && 'error') ||
+                      (tab.value === 'fulfilled' && 'success') ||
+                      (tab.value === 'unfulfilled' && 'default') ||
                       'default'
                     }
                   >
-                    {['completed', 'pending', 'cancelled', 'refunded'].includes(tab.value)
+                    {['fulfilled', 'unfulfilled'].includes(tab.value)
                       ? tableData.filter((user) => user.status === tab.value).length
                       : tableData.length}
                   </Label>
@@ -237,7 +270,6 @@ export default function OrderListView() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={table.dense}
               numSelected={table.selected.length}
               rowCount={dataFiltered.length}
               onSelectAllRows={(checked) =>
@@ -256,7 +288,7 @@ export default function OrderListView() {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -290,7 +322,6 @@ export default function OrderListView() {
                     ))}
 
                   <TableEmptyRows
-                    height={denseHeight}
                     emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
@@ -307,8 +338,6 @@ export default function OrderListView() {
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
             //
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
           />
         </Card>
       </Container>

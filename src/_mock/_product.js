@@ -6,7 +6,7 @@ export const PRODUCT_GENDER_OPTIONS = [
   { label: 'Kids', value: 'Kids' },
 ];
 
-export const PRODUCT_CATEGORY_OPTIONS = ['Shose', 'Apparel', 'Accessories'];
+export const PRODUCT_CATEGORY_OPTIONS = ['hehe', 'Apparel', 'Accessories'];
 
 export const PRODUCT_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
 
@@ -54,12 +54,12 @@ export const PRODUCT_STOCK_OPTIONS = [
 
 export const PRODUCT_PUBLISH_OPTIONS = [
   {
-    value: 'published',
-    label: 'Published',
+    value: 'active',
+    label: 'Active',
   },
   {
     value: 'draft',
-    label: 'Draft',
+    label: 'hehe',
   },
 ];
 

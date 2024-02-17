@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react';
 
+import { StorefrontPhotoProvider } from "../../../context/storefront-context";
+
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
@@ -22,29 +24,38 @@ import ProfileCover from '../profile-cover';
 import ProfileFriends from '../profile-friends';
 import ProfileGallery from '../profile-gallery';
 import ProfileFollowers from '../profile-followers';
+import AccountGeneral from "../../account/account-general";
+import ShippingOperations from "../../account/shipping-operations";
+import StorePolicies from "../../account/store-policies";
+import AccountSocialLinks from "../../account/account-social-links";
+
+import StoreIcon from '@mui/icons-material/Store';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import FeedIcon from '@mui/icons-material/Feed';
+import LinkIcon from '@mui/icons-material/Link';
 
 // ----------------------------------------------------------------------
 
 const TABS = [
   {
     value: 'profile',
-    label: 'Profile',
-    icon: <Iconify icon="solar:user-id-bold" width={24} />,
+    label: 'Store Info',
+    icon: <StoreIcon/>,
   },
   {
     value: 'followers',
-    label: 'Followers',
-    icon: <Iconify icon="solar:heart-bold" width={24} />,
+    label: 'Shipping & Operations',
+    icon: <LocalShippingIcon/>,
   },
   {
-    value: 'friends',
-    label: 'Friends',
-    icon: <Iconify icon="solar:users-group-rounded-bold" width={24} />,
+    value: 'policies',
+    label: 'Store Policies',
+    icon: <FeedIcon/>,
   },
   {
     value: 'gallery',
-    label: 'Gallery',
-    icon: <Iconify icon="solar:gallery-wide-bold" width={24} />,
+    label: 'Social Links',
+    icon: <LinkIcon/>,
   },
 ];
 
@@ -68,12 +79,13 @@ export default function UserProfileView() {
   }, []);
 
   return (
+      <StorefrontPhotoProvider>
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
         heading="Profile"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User', href: paths.dashboard.user.root },
+          { name: 'Storefront', href: paths.dashboard.user.root },
           { name: user?.displayName },
         ]}
         sx={{
@@ -118,19 +130,14 @@ export default function UserProfileView() {
         </Tabs>
       </Card>
 
-      {currentTab === 'profile' && <ProfileHome info={_userAbout} posts={_userFeeds} />}
+      {currentTab === 'profile' && <AccountGeneral />}
 
-      {currentTab === 'followers' && <ProfileFollowers followers={_userFollowers} />}
+      {currentTab === 'followers' && <ShippingOperations/>}
 
-      {currentTab === 'friends' && (
-        <ProfileFriends
-          friends={_userFriends}
-          searchFriends={searchFriends}
-          onSearchFriends={handleSearchFriends}
-        />
-      )}
+      {currentTab === 'policies' && <StorePolicies/>}
 
-      {currentTab === 'gallery' && <ProfileGallery gallery={_userGallery} />}
+      {currentTab === 'gallery' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}
     </Container>
+      </StorefrontPhotoProvider>
   );
 }

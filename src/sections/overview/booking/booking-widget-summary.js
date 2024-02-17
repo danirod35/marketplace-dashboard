@@ -27,7 +27,7 @@ export default function BookingWidgetSummary({ title, total, icon, sx, ...other 
         <Box sx={{ mb: 2, typography: 'h5' }}>{total}</Box>
         <Box sx={{ color: 'text.secondary', typography: 'subtitle2' }}>{title}</Box>
         <FormGroup>
-          <FormControlLabel control={<Switch defaultChecked />} label="Toggle Store Status" />
+          <FormControlLabel control={<Switch defaultChecked />} label="Store Status" />
         </FormGroup>
       </Box>
 

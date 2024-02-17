@@ -1,7 +1,7 @@
 export const POST_PUBLISH_OPTIONS = [
   {
-    value: 'published',
-    label: 'Published',
+    value: 'active',
+    label: 'Active',
   },
   {
     value: 'draft',

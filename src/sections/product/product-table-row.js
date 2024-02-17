@@ -26,8 +26,8 @@ RenderCellPrice.propTypes = {
 
 export function RenderCellPublish({ params }) {
   return (
-    <Label variant="soft" color={(params.row.publish === 'published' && 'info') || 'default'}>
-      {params.row.publish}
+    <Label variant="soft" color={(params.row.status === 'active' && 'success') || params.row.status === 'pending' && 'info' || 'error'}>
+        {params.row.status}
     </Label>
   );
 }
@@ -41,8 +41,7 @@ RenderCellPublish.propTypes = {
 export function RenderCellCreatedAt({ params }) {
   return (
     <ListItemText
-      primary={fDate(params.row.createdAt)}
-      secondary={fTime(params.row.createdAt)}
+      primary={params.row.createdAt}
       primaryTypographyProps={{ typography: 'body2', noWrap: true }}
       secondaryTypographyProps={{
         mt: 0.5,
@@ -61,19 +60,16 @@ RenderCellCreatedAt.propTypes = {
 
 export function RenderCellStock({ params }) {
   return (
-    <Stack sx={{ typography: 'caption', color: 'text.secondary' }}>
-      <LinearProgress
-        value={(params.row.available * 100) / params.row.quantity}
-        variant="determinate"
-        color={
-          (params.row.inventoryType === 'out of stock' && 'error') ||
-          (params.row.inventoryType === 'low stock' && 'warning') ||
-          'success'
-        }
-        sx={{ mb: 1, height: 6, maxWidth: 80 }}
+      <ListItemText
+          primary={params.row.available}
+          secondary={params.row.inventoryType}
+          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+          secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+          }}
       />
-      {!!params.row.available && params.row.available} {params.row.inventoryType}
-    </Stack>
   );
 }
 
@@ -105,11 +101,6 @@ export function RenderCellProduct({ params }) {
           >
             {params.row.name}
           </Link>
-        }
-        secondary={
-          <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
-            {params.row.category}
-          </Box>
         }
         sx={{ display: 'flex', flexDirection: 'column' }}
       />

@@ -18,8 +18,8 @@ export const TOUR_SORT_OPTIONS = [
 
 export const TOUR_PUBLISH_OPTIONS = [
   {
-    value: 'published',
-    label: 'Published',
+    value: 'active',
+    label: 'Active',
   },
   {
     value: 'draft',
@@ -106,7 +106,7 @@ export const _tours = [...Array(12)].map((_, index) => {
     endDate: _mock.time(index),
   };
 
-  const publish = index % 3 ? 'published' : 'draft';
+  const publish = index % 3 ? 'active' : 'draft';
 
   const destination = countries.map((option) => option.label)[index];
 

@@ -64,8 +64,8 @@ export const JOB_BENEFIT_OPTIONS = [
 
 export const JOB_PUBLISH_OPTIONS = [
   {
-    value: 'published',
-    label: 'Published',
+    value: 'active',
+    label: 'Active',
   },
   {
     value: 'draft',
@@ -124,7 +124,7 @@ const CONTENT = `
 `;
 
 export const _jobs = [...Array(12)].map((_, index) => {
-  const publish = index % 3 ? 'published' : 'draft';
+  const publish = index % 3 ? 'active' : 'draft';
 
   const salary = {
     type: (index % 5 && 'Custom') || 'Hourly',

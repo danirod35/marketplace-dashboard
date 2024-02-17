@@ -18,7 +18,7 @@ import {
   _appInvoices,
   _appRelated,
   _analyticPosts,
-  _appFeatured,
+  _appFeatured, _analyticTasks,
 } from 'src/_mock';
 
 import { useSettingsContext } from 'src/components/settings';
@@ -41,6 +41,7 @@ import AppFeatured from "../../app/app-featured";
 import Stack from "@mui/material/Stack";
 import AppWidget from "../../app/app-widget";
 import BookingWidgetSummary from "../../booking/booking-widget-summary";
+import AnalyticsTasks from "../../analytics/analytics-tasks";
 
 // ----------------------------------------------------------------------
 
@@ -165,7 +166,11 @@ export default function OverviewEcommerceView() {
           />
         </Grid>
 
-        <Grid xs={12} md={8}>
+        <Grid xs={12} md={6} lg={4}>
+          <AnalyticsTasks title="To-Do" list={_analyticTasks} />
+        </Grid>
+
+        <Grid xs={12} md={4}>
           <BookingWidgetSummary title="Shopify Connection" total='Connected' icon={<CheckInIllustration />} />
         </Grid>
 

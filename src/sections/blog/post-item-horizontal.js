@@ -53,7 +53,7 @@ export default function PostItemHorizontal({ post }) {
           }}
         >
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Label variant="soft" color={(publish === 'published' && 'info') || 'default'}>
+            <Label variant="soft" color={(publish === 'active' && 'info') || 'default'}>
               {publish}
             </Label>
 
