@@ -40,7 +40,7 @@ import {
   RenderCellPrice,
   RenderCellPublish,
   RenderCellProduct,
-  RenderCellCreatedAt,
+  RenderCellCreatedAt, RenderCategorySelect,
 } from '../product-table-row';
 
 // ----------------------------------------------------------------------
@@ -49,7 +49,7 @@ const mockProducts = [
   {
     id: 1,
     name: 'Product A',
-    createdAt: 'Accessories',
+    editCategory: 'Accessories',
     available: 75,
     inventoryType: 'In Stock',
     price: 49.99,
@@ -58,7 +58,7 @@ const mockProducts = [
   {
     id: 2,
     name: 'Product B',
-    createdAt: 'Accessories',
+    editCategory: 'Accessories',
     available: 75,
     inventoryType: 'Out of Stock',
     price: 29.99,
@@ -67,7 +67,7 @@ const mockProducts = [
   {
     id: 3,
     name: 'Product C',
-    createdAt: 'Accessories',
+    editCategory: 'Accessories',
     available: 75,
     inventoryType: 'In Stock',
     price: 39.99,
@@ -76,7 +76,7 @@ const mockProducts = [
   {
     id: 4,
     name: 'Product D',
-    createdAt: 'Accessories',
+    editCategory: 'Accessories',
     available: 75,
     inventoryType: 'Out of Stock',
     price: 59.99,
@@ -102,7 +102,7 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 // ----------------------------------------------------------------------
 
-export default function ProductListView() {
+export default function ProductImportView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -145,21 +145,21 @@ export default function ProductListView() {
     setFilters(defaultFilters);
   }, []);
 
-  const handleDeleteRow = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      enqueueSnackbar('Delete success!');
-
-      setTableData(deleteRow);
-    },
-    [enqueueSnackbar, tableData]
-  );
+  // const handleDeleteRow = useCallback(
+  //   (id) => {
+  //     const deleteRow = tableData.filter((row) => row.id !== id);
+  //
+  //     enqueueSnackbar('Import success!');
+  //
+  //     setTableData(deleteRow);
+  //   },
+  //   [enqueueSnackbar, tableData]
+  // );
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
-    enqueueSnackbar('Delete success!');
+    enqueueSnackbar('Import success!');
 
     setTableData(deleteRows);
   }, [enqueueSnackbar, selectedRowIds, tableData]);
@@ -178,79 +178,81 @@ export default function ProductListView() {
     [router]
   );
 
+  const handleCategoryChange = (selectedCategory) => {
+    // Update state or perform any necessary actions with the selected category
+    console.log('Selected category:', selectedCategory);
+  };
+
   const columns = [
     {
       field: 'name',
       headerName: 'Product',
-      flex: 1,
-      minWidth: 360,
+      width: 360,
       hideable: false,
       renderCell: (params) => <RenderCellProduct params={params} />,
     },
     {
-      field: 'createdAt',
-      headerName: 'Category',
+      field: 'editCategory',
+      headerName: 'Edit Category',
+      width: 360,
+      renderCell: (params) => <RenderCategorySelect params={{ row: { editCategory: 'Choose a category' } }} onChange={handleCategoryChange} />,
+    },
+    {
+      field: '',
+      headerName: '',
+      flex: 1,
       width: 160,
-      renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
-    {
-      field: 'inventoryType',
-      headerName: 'Stock',
-      width: 160,
-      type: 'singleSelect',
-      valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params} />,
-    },
-    {
-      field: 'price',
-      headerName: 'Price',
-      width: 140,
-      editable: true,
-      renderCell: (params) => <RenderCellPrice params={params} />,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 110,
-      type: 'singleSelect',
-      editable: true,
-      valueOptions: PUBLISH_OPTIONS,
-      renderCell: (params) => <RenderCellPublish params={params} />,
-    },
-    {
-      type: 'actions',
-      field: 'actions',
-      headerName: 'Actions',
-      align: 'center',
-      headerAlign: 'left',
-      width: 80,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      getActions: (params) => [
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:eye-bold" />}
-          label="View"
-          onClick={() => handleViewRow(params.row.id)}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
-          label="Edit"
-          onClick={() => handleEditRow(params.row.id)}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          label="Delete"
-          onClick={() => {
-            handleDeleteRow(params.row.id);
-          }}
-          sx={{ color: 'error.main' }}
-        />,
-      ],
-    },
+    // {
+    //   field: 'price',
+    //   headerName: 'Price',
+    //   width: 140,
+    //   editable: true,
+    //   renderCell: (params) => <RenderCellPrice params={params} />,
+    // },
+    // {
+    //   field: 'status',
+    //   headerName: 'Status',
+    //   width: 110,
+    //   type: 'singleSelect',
+    //   editable: true,
+    //   valueOptions: PUBLISH_OPTIONS,
+    //   renderCell: (params) => <RenderCellPublish params={params} />,
+    // },
+    // {
+    //   type: 'actions',
+    //   field: 'actions',
+    //   headerName: 'Actions',
+    //   align: 'center',
+    //   headerAlign: 'left',
+    //   width: 80,
+    //   sortable: false,
+    //   filterable: false,
+    //   disableColumnMenu: true,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:eye-bold" />}
+    //       label="View"
+    //       onClick={() => handleViewRow(params.row.id)}
+    //     />,
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:pen-bold" />}
+    //       label="Edit"
+    //       onClick={() => handleEditRow(params.row.id)}
+    //     />,
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+    //       label="Delete"
+    //       onClick={() => {
+    //         handleDeleteRow(params.row.id);
+    //       }}
+    //       sx={{ color: 'error.main' }}
+    //     />,
+    //   ],
+    // },
   ];
 
   const getTogglableColumns = () =>
@@ -269,25 +271,15 @@ export default function ProductListView() {
         }}
       >
         <CustomBreadcrumbs
-          heading="Listings"
+          heading="Import Products"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
             {
               name: 'Product',
-              href: paths.dashboard.product.root,
+              href: paths.dashboard.product.import,
             },
-            { name: 'Listings' },
+            { name: 'Import Product' },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.product.import}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              Import Products
-            </Button>
-          }
           sx={{
             mb: {
               xs: 3,
@@ -326,12 +318,12 @@ export default function ProductListView() {
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    <ProductTableToolbar
-                      filters={filters}
-                      onFilters={handleFilters}
-                      stockOptions={PRODUCT_STOCK_OPTIONS}
-                      publishOptions={PUBLISH_OPTIONS}
-                    />
+                    {/*<ProductTableToolbar*/}
+                    {/*  filters={filters}*/}
+                    {/*  onFilters={handleFilters}*/}
+                    {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
+                    {/*  publishOptions={PUBLISH_OPTIONS}*/}
+                    {/*/>*/}
 
                     <GridToolbarQuickFilter />
 
@@ -342,20 +334,31 @@ export default function ProductListView() {
                       alignItems="center"
                       justifyContent="flex-end"
                     >
-                      {!!selectedRowIds.length && (
-                        <Button
-                          size="small"
-                          color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-                          onClick={confirmRows.onTrue}
-                        >
-                          Delete ({selectedRowIds.length})
-                        </Button>
-                      )}
+                      {/*{!!selectedRowIds.length && (*/}
+                      {/*  <Button*/}
+                      {/*    size="small"*/}
+                      {/*    color="error"*/}
+                      {/*    startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}*/}
+                      {/*    onClick={confirmRows.onTrue}*/}
+                      {/*  >*/}
+                      {/*    Delete ({selectedRowIds.length})*/}
+                      {/*  </Button>*/}
+                      {/*)}*/}
+                      <Button
+                          component={RouterLink}
+                          href={paths.dashboard.product.root}
+                      >
+                        Back to Listings
+                      </Button>
 
-                      <GridToolbarColumnsButton />
-                      <GridToolbarFilterButton />
-                      <GridToolbarExport />
+                      <Button
+                          disabled={!selectedRowIds.length}
+                          onClick={confirmRows.onTrue}
+                          variant="contained"
+                          startIcon={<Iconify icon="mingcute:add-line" />}
+                      >
+                        Confirm Import
+                      </Button>
                     </Stack>
                   </GridToolbarContainer>
 
@@ -385,22 +388,22 @@ export default function ProductListView() {
       <ConfirmDialog
         open={confirmRows.value}
         onClose={confirmRows.onFalse}
-        title="Delete"
+        title="Import Products"
         content={
           <>
-            Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
+            Are you sure want to import <strong> {selectedRowIds.length} </strong> items?
           </>
         }
         action={
           <Button
             variant="contained"
-            color="error"
+            color="success"
             onClick={() => {
               handleDeleteRows();
               confirmRows.onFalse();
             }}
           >
-            Delete
+            Import
           </Button>
         }
       />

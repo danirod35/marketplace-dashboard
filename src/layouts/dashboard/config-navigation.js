@@ -21,6 +21,8 @@ const icon = (name) => (
 import CategoryIcon from '@mui/icons-material/Category';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import StoreIcon from '@mui/icons-material/Store';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PolicyIcon from '@mui/icons-material/Policy';
 
 const ICONS = {
   job: icon('ic_job'),
@@ -135,20 +137,20 @@ export function useNavData() {
           // },
 
           // INVOICE
-          {
-            title: t('invoice'),
-            path: paths.dashboard.invoice.root,
-            icon: ICONS.invoice,
-            children: [
-              { title: t('list'), path: paths.dashboard.invoice.root },
-              {
-                title: t('details'),
-                path: paths.dashboard.invoice.demo.details,
-              },
-              { title: t('create'), path: paths.dashboard.invoice.new },
-              { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
-            ],
-          },
+          // {
+          //   title: t('invoice'),
+          //   path: paths.dashboard.invoice.root,
+          //   icon: ICONS.invoice,
+          //   children: [
+          //     { title: t('list'), path: paths.dashboard.invoice.root },
+          //     {
+          //       title: t('details'),
+          //       path: paths.dashboard.invoice.demo.details,
+          //     },
+          //     { title: t('create'), path: paths.dashboard.invoice.new },
+          //     { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+          //   ],
+          // },
 
           // BLOG
           // {
@@ -246,6 +248,7 @@ export function useNavData() {
           //   caption: t('only_admin_can_see_this_item'),
           // },
           { title: t('Profile Settings'), path: paths.dashboard.user.account, icon: ICONS.user, roles: ['admin', 'user'],},
+          { title: t('Company Settings'), path: paths.dashboard.user.account, icon: <PolicyIcon/>, roles: ['admin', 'user'],},
           // {
           //   title: t('menu_level'),
           //   path: '#/dashboard/menu_level',

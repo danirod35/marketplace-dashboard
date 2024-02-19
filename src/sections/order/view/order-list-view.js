@@ -197,7 +197,7 @@ export default function OrderListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="List"
+          heading="Orders"
           links={[
             {
               name: 'Dashboard',

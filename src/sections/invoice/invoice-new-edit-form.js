@@ -43,8 +43,8 @@ export default function InvoiceNewEditForm({ currentInvoice }) {
     items: Yup.lazy(() =>
       Yup.array().of(
         Yup.object({
-          title: Yup.string().required('Title is required'),
-          service: Yup.string().required('Service is required'),
+          title: Yup.string().required('Product Title is required'),
+          service: Yup.string().required('Category is required'),
           quantity: Yup.number()
             .required('Quantity is required')
             .min(1, 'Quantity must be more than 0'),
@@ -74,13 +74,29 @@ export default function InvoiceNewEditForm({ currentInvoice }) {
       invoiceTo: currentInvoice?.invoiceTo || null,
       items: currentInvoice?.items || [
         {
-          title: '',
-          description: '',
+          title: 'Slide Tag',
+          description: 'Does cool things. Random description ',
           service: '',
-          quantity: 1,
+          quantity: 75,
           price: 0,
           total: 0,
         },
+      {
+          title: 'Buddy Tag',
+          description: 'Does cool things. Random description ',
+          service: '',
+          quantity: 75,
+          price: 0,
+          total: 0,
+      },
+          {
+              title: 'Random Product',
+              description: 'Does cool things. Random description ',
+              service: '',
+              quantity: 75,
+              price: 0,
+              total: 0,
+          },
       ],
       totalAmount: currentInvoice?.totalAmount || 0,
     }),
@@ -132,31 +148,17 @@ export default function InvoiceNewEditForm({ currentInvoice }) {
   return (
     <FormProvider methods={methods}>
       <Card>
-        <InvoiceNewEditAddress />
-
-        <InvoiceNewEditStatusDate />
-
         <InvoiceNewEditDetails />
       </Card>
 
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
-        <LoadingButton
-          color="inherit"
-          size="large"
-          variant="outlined"
-          loading={loadingSave.value && isSubmitting}
-          onClick={handleSaveAsDraft}
-        >
-          Save as Draft
-        </LoadingButton>
-
-        <LoadingButton
+          <LoadingButton
           size="large"
           variant="contained"
           loading={loadingSend.value && isSubmitting}
           onClick={handleCreateAndSend}
         >
-          {currentInvoice ? 'Update' : 'Create'} & Send
+          Import Products
         </LoadingButton>
       </Stack>
     </FormProvider>

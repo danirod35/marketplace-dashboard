@@ -26,11 +26,11 @@ import Carousel, { useCarousel, CarouselArrows } from 'src/components/carousel';
 
 // ----------------------------------------------------------------------
 
-const STEP = 50;
+const STEP = 5;
 
-const MIN_AMOUNT = 0;
+const MIN_AMOUNT = 10;
 
-const MAX_AMOUNT = 1000;
+const MAX_AMOUNT = 25;
 
 const AVATAR_SIZE = 40;
 
@@ -173,9 +173,14 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
 
   const renderInput = (
     <Stack spacing={3}>
-      <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-        insert amount
-      </Typography>
+        <Stack>
+            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+                Choose Discount Rate
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                The larger the discount you apply to your products, the more they will be boosted in the marketplace.
+            </Typography>
+        </Stack>
 
       <InputAmount
         amount={amount}
@@ -198,7 +203,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
         <Box component="span" sx={{ flexGrow: 1 }}>
           Your Balance
         </Box>
-        {fCurrency(34212)}
+        100%
       </Stack>
 
       <Button
@@ -208,7 +213,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
         disabled={amount === 0}
         onClick={confirm.onTrue}
       >
-        Transfer Now
+        Set Discount Rate
       </Button>
     </Stack>
   );
@@ -226,24 +231,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
         <CardHeader title={title} subheader={subheader} />
 
         <Stack sx={{ p: 3 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              Recent
-            </Typography>
-
-            <Button
-              size="small"
-              color="inherit"
-              endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
-              sx={{ mr: -1 }}
-            >
-              View All
-            </Button>
-          </Stack>
-
-          {renderCarousel}
-
-          {renderInput}
+            {renderInput}
         </Stack>
       </Stack>
 
@@ -272,8 +260,6 @@ BankingQuickTransfer.propTypes = {
 function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
   return (
     <Stack direction="row" justifyContent="center" spacing={1} sx={sx}>
-      <Typography variant="h5">$</Typography>
-
       <Input
         disableUnderline
         size="small"
@@ -296,6 +282,7 @@ function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
         }}
         {...other}
       />
+        <Typography variant="h5">%</Typography>
     </Stack>
   );
 }

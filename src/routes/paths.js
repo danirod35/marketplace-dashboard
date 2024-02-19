@@ -107,7 +107,6 @@ export const paths = {
     fileManager: `${ROOTS.DASHBOARD}/file-manager`,
     permission: `${ROOTS.DASHBOARD}/permission`,
     general: {
-      app: `${ROOTS.DASHBOARD}/app`,
       ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,
       analytics: `${ROOTS.DASHBOARD}/analytics`,
       banking: `${ROOTS.DASHBOARD}/banking`,
@@ -129,6 +128,7 @@ export const paths = {
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
+      import: `${ROOTS.DASHBOARD}/product/import`,
       details: (id) => `${ROOTS.DASHBOARD}/product/${id}`,
       edit: (id) => `${ROOTS.DASHBOARD}/product/${id}/edit`,
       demo: {

@@ -28,10 +28,9 @@ import FormProvider, {
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Label from "../../components/label";
-import {_bankingContacts, _tags, _tourGuides} from "../../_mock";
+import {_tags, _tourGuides} from "../../_mock";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import BankingQuickTransfer from "../overview/banking/banking-quick-transfer";
 
 export default function AccountGeneral() {
     const { enqueueSnackbar } = useSnackbar();
@@ -210,12 +209,8 @@ export default function AccountGeneral() {
                                 onRemoveAll={handleRemoveAllFiles}
                                 onUpload={() => console.info('ON UPLOAD')}
                             />
-                            <BankingQuickTransfer title="Discount Rate" list={_bankingContacts} />
                             <Stack spacing={1}>
                                 <Typography variant="body2">What categories does your store fall under?</Typography>
-                                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                    This gives us a general idea of what products you offer, and can help improve visibility.
-                                </Typography>
                                 <RHFAutocomplete
                                     name="tags"
                                     placeholder="+ Tags"
