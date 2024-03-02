@@ -1,4 +1,4 @@
-import BlankView from 'src/sections/blank/view';
+import NewUserApplication from "../../../sections/new-user-application/view/view";
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function BlankPage() {
-  return <BlankView />;
+  return <NewUserApplication />;
 }

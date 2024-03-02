@@ -63,26 +63,6 @@ export default function CheckoutCart() {
           Continue Shopping
         </Button>
       </Grid>
-
-      <Grid xs={12} md={4}>
-        <CheckoutSummary
-          total={checkout.total}
-          discount={checkout.discount}
-          subTotal={checkout.subTotal}
-          onApplyDiscount={checkout.onApplyDiscount}
-        />
-
-        <Button
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          disabled={empty}
-          onClick={checkout.onNextStep}
-        >
-          Check Out
-        </Button>
-      </Grid>
     </Grid>
   );
 }

@@ -14,7 +14,6 @@ import { fDateTime } from 'src/utils/format-time';
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 
-import ShopifyLogo from "../../../assets/images/ShopifyLogoAvatar.png";
 import Image from 'next/image'
 
 // ----------------------------------------------------------------------
@@ -65,7 +64,16 @@ function OrderItem({ item, lastTimeline }) {
             bgcolor: 'background.neutral',
           }}
         >
-          <Box component="img" src="../../../assets/images/ShopifyLogoAvatar.png" sx={{ width: 24, height: 24 }} />
+            <Box
+                sx={{
+                    width: 48,
+                    height: 48,
+                    overflow: 'hidden',
+                    position: 'relative',
+                }}
+            >
+                <Image src="/assets/images/faqs/ShopifyLogoAvatar.png" alt="Logo" layout="fill" objectFit="contain" />
+            </Box>
         </Avatar>
         {lastTimeline ? null : <TimelineConnector />}
       </TimelineSeparator>

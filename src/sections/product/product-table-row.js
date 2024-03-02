@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -33,8 +33,8 @@ RenderCellPrice.propTypes = {
 
 export function RenderCellPublish({ params }) {
   return (
-    <Label variant="soft" color={(params.row.status === 'active' && 'success') || params.row.status === 'pending' && 'info' || 'error'}>
-        {params.row.status}
+    <Label variant="soft" color={(params.row.approval_status === 'active' && 'success') || params.row.approval_status === 'pending' && 'info' || 'error'}>
+        {params.row.approval_status}
     </Label>
   );
 }
@@ -48,7 +48,7 @@ RenderCellPublish.propTypes = {
 export function RenderCellCreatedAt({ params }) {
   return (
     <ListItemText
-      primary={params.row.createdAt}
+      primary={params.row.category}
       primaryTypographyProps={{ typography: 'body2', noWrap: true }}
       secondaryTypographyProps={{
         mt: 0.5,
@@ -59,17 +59,26 @@ export function RenderCellCreatedAt({ params }) {
   );
 }
 
-export function RenderCategorySelect({ params, onChange }) {
-    const [selectedCategory, setSelectedCategory] = useState(params.row.editCategory);
+export function RenderCategorySelect({ params, onNewRowChange }) {
+    const [selectedCategory, setSelectedCategory] = useState(params.row.editCategory || '');
 
     const handleChange = (event) => {
-        setSelectedCategory(event.target.value);
-        onChange(event.target.value);
+        const selectedValue = event.target.value;
+        setSelectedCategory(selectedValue);
+
+        // Only call onNewRowChange if the category has changed
+        if (selectedValue !== '') {
+            const newRow = {
+                id: params.row.id,
+                category: selectedValue,
+                importStatus: true,
+            };
+            onNewRowChange(newRow);
+        }
     };
 
     return (
-        <FormControl fullWidth>
-            {/*<InputLabel>Category</InputLabel>*/}
+        <FormControl required fullWidth>
             <Select
                 value={selectedCategory}
                 onChange={handleChange}
@@ -94,14 +103,16 @@ export function RenderCategorySelect({ params, onChange }) {
 
 RenderCategorySelect.propTypes = {
     params: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
 };
+
+
+
 
 export function RenderCellStock({ params }) {
   return (
       <ListItemText
-          primary={params.row.available}
-          secondary={params.row.inventoryType}
+          primary={params.row.total_inventory}
+          secondary={params.row.inventory_status}
           primaryTypographyProps={{ typography: 'body2', noWrap: true }}
           secondaryTypographyProps={{
               mt: 0.5,
@@ -122,8 +133,8 @@ export function RenderCellProduct({ params }) {
   return (
     <Stack direction="row" alignItems="center" sx={{ py: 2, width: 1 }}>
       <Avatar
-        alt={params.row.name}
-        src={params.row.coverUrl}
+        alt={params.row.title}
+        src={params.row.image}
         variant="rounded"
         sx={{ width: 64, height: 64, mr: 2 }}
       />
@@ -138,7 +149,7 @@ export function RenderCellProduct({ params }) {
             onClick={params.row.onViewRow}
             sx={{ cursor: 'pointer' }}
           >
-            {params.row.name}
+            {params.row.title}
           </Link>
         }
         sx={{ display: 'flex', flexDirection: 'column' }}

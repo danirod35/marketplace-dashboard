@@ -30,7 +30,7 @@ export default function CheckoutOrderComplete({ open, onReset, onDownloadPDF }) 
     >
       <Typography variant="h4">Thank you for your purchase!</Typography>
 
-      <OrderCompleteIllustration sx={{ height: 260 }} />
+      {/*<image href="/assets/illustrations/characters/character_10.png" height="300" x="300" y="30" />*/}
 
       <Typography>
         Thanks for placing order

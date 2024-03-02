@@ -8,16 +8,19 @@ import Button from '@mui/material/Button';
 import Stepper from '@mui/material/Stepper';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import { alpha, styled } from '@mui/material/styles';
+import {alpha, styled, useTheme} from '@mui/material/styles';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 
 import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
+import StoreInfo from "../../../account/store-info";
+import ShippingOperations from "../../../account/shipping-operations";
+import ApplicationComplete from "../../../account/application-complete";
 
 // ----------------------------------------------------------------------
 
-const STEPS = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+const STEPS = ['Store Information', 'Shipping & Operations', 'Completed'];
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -64,21 +67,31 @@ const QontoStepIconRoot = styled('div')(({ theme, ownerState }) => ({
 }));
 
 function QontoStepIcon(props) {
-  const { active, completed, className } = props;
+  const { active, completed, className, activeStep } = props;
+
+  // Determine if it's the last step
+  const isLastStep = activeStep === STEPS.length - 1;
 
   return (
-    <QontoStepIconRoot ownerState={{ active }} className={className}>
-      {completed ? (
-        <Iconify
-          icon="eva:checkmark-fill"
-          className="QontoStepIcon-completedIcon"
-          width={24}
-          height={24}
-        />
-      ) : (
-        <div className="QontoStepIcon-circle" />
-      )}
-    </QontoStepIconRoot>
+      <QontoStepIconRoot ownerState={{ active, completed }} className={className}>
+        {isLastStep ? (
+            <Iconify
+                icon="eva:checkmark-fill"
+                className="QontoStepIcon-completedIcon"
+                width={24}
+                height={24}
+            />
+        ) : completed ? (
+            <Iconify
+                icon="eva:checkmark-fill"
+                className="QontoStepIcon-completedIcon"
+                width={24}
+                height={24}
+            />
+        ) : (
+            <div className="QontoStepIcon-circle" />
+        )}
+      </QontoStepIconRoot>
   );
 }
 
@@ -170,17 +183,18 @@ ColorlibStepIcon.propTypes = {
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return 'Select campaign settings...';
+      return <StoreInfo />;
     case 1:
-      return 'What is an ad group anyways?';
+      return <ShippingOperations/>;
     case 2:
-      return 'This is the bit I really care about!';
+      return <ApplicationComplete/>;
     default:
       return 'Unknown step';
   }
 }
 
 export default function CustomizedSteppers() {
+
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -195,66 +209,53 @@ export default function CustomizedSteppers() {
     setActiveStep(0);
   };
 
+  const isLastStep = activeStep === STEPS.length - 1;
+  const isSecondToLastStep = activeStep === STEPS.length - 2;
+
   return (
-    <>
-      <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-        {STEPS.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+      <>
+        <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
+          {STEPS.map((label, index) => (
+              <Step key={label}>
+                <StepLabel StepIconComponent={(props) => <QontoStepIcon {...props} activeStep={activeStep} />} icon={index}>
+                  {label}
+                </StepLabel>
+              </Step>
+          ))}
+        </Stepper>
 
-      <Box sx={{ mb: 5 }} />
+        <Box sx={{ mb: 5 }} />
 
-      <Stepper alternativeLabel activeStep={activeStep} connector={<ColorlibConnector />}>
-        {STEPS.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+            <>
+              <Paper
+                  sx={{
+                    p: 3,
+                    my: 3,
+                    minHeight: 120,
+                    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+                  }}
+              >
+                <Typography sx={{ my: 1 }}>{getStepContent(activeStep)}</Typography>
+              </Paper>
 
-      {activeStep === STEPS.length ? (
-        <>
-          <Paper
-            sx={{
-              p: 3,
-              my: 3,
-              minHeight: 120,
-              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
-            }}
-          >
-            <Typography sx={{ my: 1 }}>All steps completed - you&apos;re finished</Typography>
-          </Paper>
-
-          <Button color="inherit" onClick={handleReset} sx={{ mr: 1 }}>
-            Reset
-          </Button>
-        </>
-      ) : (
-        <>
-          <Paper
-            sx={{
-              p: 3,
-              my: 3,
-              minHeight: 120,
-              bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
-            }}
-          >
-            <Typography sx={{ my: 1 }}>{getStepContent(activeStep)}</Typography>
-          </Paper>
-
-          <Box sx={{ textAlign: 'right' }}>
-            <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
-            <Button variant="contained" onClick={handleNext} sx={{ mr: 1 }}>
-              {activeStep === STEPS.length - 1 ? 'Finish' : 'Next'}
-            </Button>
-          </Box>
-        </>
-      )}
-    </>
+              <Box sx={{ textAlign: 'right' }}>
+                {isSecondToLastStep && (
+                    <>
+                      <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+                        Back
+                      </Button>
+                      <Button variant="contained" onClick={handleNext} sx={{ mr: 1 }}>
+                        Finish
+                      </Button>
+                    </>
+                )}
+                {!isSecondToLastStep && !isLastStep && (
+                    <Button variant="contained" onClick={handleNext} sx={{ mr: 1 }}>
+                      Next
+                    </Button>
+                )}
+              </Box>
+            </>
+      </>
   );
 }

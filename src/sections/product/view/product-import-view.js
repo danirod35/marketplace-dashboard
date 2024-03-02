@@ -42,47 +42,21 @@ import {
   RenderCellProduct,
   RenderCellCreatedAt, RenderCategorySelect,
 } from '../product-table-row';
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
-const mockProducts = [
-  {
-    id: 1,
-    name: 'Product A',
-    editCategory: 'Accessories',
-    available: 75,
-    inventoryType: 'In Stock',
-    price: 49.99,
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Product B',
-    editCategory: 'Accessories',
-    available: 75,
-    inventoryType: 'Out of Stock',
-    price: 29.99,
-    status: 'pending',
-  },
-  {
-    id: 3,
-    name: 'Product C',
-    editCategory: 'Accessories',
-    available: 75,
-    inventoryType: 'In Stock',
-    price: 39.99,
-    status: 'rejected',
-  },
-  {
-    id: 4,
-    name: 'Product D',
-    editCategory: 'Accessories',
-    available: 75,
-    inventoryType: 'Out of Stock',
-    price: 59.99,
-    status: 'active',
-  },
-];
+// const mockProducts = [
+//   {
+//     id: 1,
+//     title: 'Product A',
+//     editCategory: 'Accessories',
+//     available: 75,
+//     inventoryType: 'In Stock',
+//     price: 49.99,
+//     status: 'active',
+//   },
+// ];
 
 const PUBLISH_OPTIONS = [
   { value: 'active', label: 'Active' },
@@ -113,19 +87,75 @@ export default function ProductImportView() {
 
   const { products, productsLoading } = useGetProducts();
 
+  const [productsResponse, setProductsResponse] = useState([]);
+
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
 
+  const [importRows, setImportRows] = useState([]);
+
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
 
-  useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+  const fetchProductsData = async () => {
+    try {
+      // Make API call to fetch products with query parameters
+      const response = await axios.get('http://localhost:3000/products', {
+        params: {
+          importStatus: false, // or false depending on your requirement
+        },
+      });
+      // Extract products data from the response
+      const productsData = response.data;
+      // Set products state with fetched data
+      setProductsResponse(productsData);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
-  }, [products]);
+  };
+
+  // const checkIfCategorySelected = () => {
+  //   const selectedImportRows = importRows.filter((row) => selectedRowIds.includes(row.id));
+  //   console.log('Selected Import Rows', selectedImportRows);
+  //   const missingCategory = selectedRowIds.filter((row) => !importRows.includes(row.id));
+  //   console.log('Missing Category', missingCategory);
+  //
+  //   if (missingCategory.length > 0) {
+  //     enqueueSnackbar('Error: Please Select A Category to Import', {
+  //       variant: 'error',
+  //     })
+  //   }
+  // }
+
+  const postImportData = async (importRows) => {
+    try {
+      const selectedImportRows = importRows.filter((row) => selectedRowIds.includes(row.id));
+      // Make POST request with importRows data as the request body
+      const response = await axios.post('http://localhost:3000/import', selectedImportRows);
+      // Handle response if necessary
+      console.log('Import data posted successfully:', response.data);
+
+      handleDeleteRows();
+
+      // Show a success message
+      enqueueSnackbar('Products Successfully imported!');
+    } catch (error) {
+      console.error('Error posting import data:', error);
+    }
+  };
+
+  // Fetch products data when the component mounts
+  useEffect(() => {
+    fetchProductsData();
+  }, []);
+
+  useEffect(() => {
+    if (productsResponse?.length) {
+      setTableData(productsResponse);
+    }
+  }, [productsResponse]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -145,42 +175,34 @@ export default function ProductImportView() {
     setFilters(defaultFilters);
   }, []);
 
-  // const handleDeleteRow = useCallback(
-  //   (id) => {
-  //     const deleteRow = tableData.filter((row) => row.id !== id);
-  //
-  //     enqueueSnackbar('Import success!');
-  //
-  //     setTableData(deleteRow);
-  //   },
-  //   [enqueueSnackbar, tableData]
-  // );
-
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
+    // Filter out the rows that are selected for deletion
+    const remainingRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
-    enqueueSnackbar('Import success!');
+    console.log('remainingRows', remainingRows);
 
-    setTableData(deleteRows);
+    // Update the table data with the remaining rows
+    setTableData(remainingRows);
+
+    // Clear the selected row IDs
+    setSelectedRowIds([]);
   }, [enqueueSnackbar, selectedRowIds, tableData]);
 
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.product.edit(id));
-    },
-    [router]
-  );
 
-  const handleViewRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.product.details(id));
-    },
-    [router]
-  );
+  const handleNewRowChange = (newRow) => {
+    // Check if the row already exists in importRows based on its id
+    const existingRowIndex = importRows.findIndex(row => row.id === newRow.id);
 
-  const handleCategoryChange = (selectedCategory) => {
-    // Update state or perform any necessary actions with the selected category
-    console.log('Selected category:', selectedCategory);
+    // If the row already exists, update its category
+    if (existingRowIndex !== -1) {
+      const updatedArray = [...importRows];
+      updatedArray[existingRowIndex] = newRow;
+      setImportRows(updatedArray);
+    } else {
+      // If the row does not exist, add it to the importRows array
+      setImportRows(prevRows => [...prevRows, newRow]);
+    }
+
   };
 
   const columns = [
@@ -195,7 +217,7 @@ export default function ProductImportView() {
       field: 'editCategory',
       headerName: 'Edit Category',
       width: 360,
-      renderCell: (params) => <RenderCategorySelect params={{ row: { editCategory: 'Choose a category' } }} onChange={handleCategoryChange} />,
+      renderCell: (params) => <RenderCategorySelect params={params} onNewRowChange={handleNewRowChange} />,
     },
     {
       field: '',
@@ -203,56 +225,6 @@ export default function ProductImportView() {
       flex: 1,
       width: 160,
     },
-    // {
-    //   field: 'price',
-    //   headerName: 'Price',
-    //   width: 140,
-    //   editable: true,
-    //   renderCell: (params) => <RenderCellPrice params={params} />,
-    // },
-    // {
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   width: 110,
-    //   type: 'singleSelect',
-    //   editable: true,
-    //   valueOptions: PUBLISH_OPTIONS,
-    //   renderCell: (params) => <RenderCellPublish params={params} />,
-    // },
-    // {
-    //   type: 'actions',
-    //   field: 'actions',
-    //   headerName: 'Actions',
-    //   align: 'center',
-    //   headerAlign: 'left',
-    //   width: 80,
-    //   sortable: false,
-    //   filterable: false,
-    //   disableColumnMenu: true,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       showInMenu
-    //       icon={<Iconify icon="solar:eye-bold" />}
-    //       label="View"
-    //       onClick={() => handleViewRow(params.row.id)}
-    //     />,
-    //     <GridActionsCellItem
-    //       showInMenu
-    //       icon={<Iconify icon="solar:pen-bold" />}
-    //       label="Edit"
-    //       onClick={() => handleEditRow(params.row.id)}
-    //     />,
-    //     <GridActionsCellItem
-    //       showInMenu
-    //       icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-    //       label="Delete"
-    //       onClick={() => {
-    //         handleDeleteRow(params.row.id);
-    //       }}
-    //       sx={{ color: 'error.main' }}
-    //     />,
-    //   ],
-    // },
   ];
 
   const getTogglableColumns = () =>
@@ -299,7 +271,7 @@ export default function ProductImportView() {
           <DataGrid
             checkboxSelection
             disableRowSelectionOnClick
-            rows={mockProducts}
+            rows={tableData}
             columns={columns}
             loading={productsLoading}
             getRowHeight={() => 'auto'}
@@ -334,6 +306,7 @@ export default function ProductImportView() {
                       alignItems="center"
                       justifyContent="flex-end"
                     >
+                      {/*Possibly where Apply to all will be added*/}
                       {/*{!!selectedRowIds.length && (*/}
                       {/*  <Button*/}
                       {/*    size="small"*/}
@@ -353,12 +326,24 @@ export default function ProductImportView() {
 
                       <Button
                           disabled={!selectedRowIds.length}
-                          onClick={confirmRows.onTrue}
+                          onClick={() => {
+                            const missingCategory = selectedRowIds.filter((rowId) => !importRows.some((row) => row.id === rowId));
+                            console.log('selected rowIds', selectedRowIds);
+                            console.log('missingCategory', missingCategory);
+                            console.log('importRows', importRows);
+
+                            if (missingCategory.length > 0) {
+                              enqueueSnackbar('Error: Please select a category to import', { variant: 'error' });
+                            } else {
+                              confirmRows.onTrue();
+                            }
+                          }}
                           variant="contained"
                           startIcon={<Iconify icon="mingcute:add-line" />}
                       >
                         Confirm Import
                       </Button>
+
                     </Stack>
                   </GridToolbarContainer>
 
@@ -399,8 +384,8 @@ export default function ProductImportView() {
             variant="contained"
             color="success"
             onClick={() => {
-              handleDeleteRows();
               confirmRows.onFalse();
+              postImportData(importRows);
             }}
           >
             Import

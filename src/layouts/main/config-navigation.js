@@ -32,6 +32,7 @@ export const navConfig = [
           { title: 'Payment', path: paths.payment },
           { title: 'Maintenance', path: paths.maintenance },
           { title: 'Coming Soon', path: paths.comingSoon },
+          { title: 'New User Application', path: paths.newUserApplication },
         ],
       },
       {

@@ -45,6 +45,7 @@
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "firebase": "^10.7.1",
+    "formik": "^2.4.5",
     "framer-motion": "^10.16.16",
     "highlight.js": "^11.9.0",
     "i18next": "^23.7.8",

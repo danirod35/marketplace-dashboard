@@ -1,24 +1,38 @@
 import * as Yup from 'yup';
-import { useForm} from 'react-hook-form';
+import { useCallback } from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
+import { fData } from 'src/utils/format-number';
+
 import { countries, states } from 'src/assets/data';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
+  RHFSwitch,
   RHFTextField,
+  RHFUploadAvatar,
   RHFAutocomplete,
 } from 'src/components/hook-form';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import Label from "../../components/label";
+import InputAdornment from "@mui/material/InputAdornment";
+import Iconify from "../../components/iconify";
 
 // ----------------------------------------------------------------------
 
-export default function ShippingOperations() {
+export default function StoreInfo() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { user } = useMockedUser();
@@ -26,6 +40,7 @@ export default function ShippingOperations() {
   const userStatus = 'active';
 
   const UpdateUserSchema = Yup.object().shape({
+    storeName: Yup.string().required('Store Name is required'),
     postalService: Yup.string().required('Postal Service is required'),
     monthlyRevenue: Yup.number().required('Monthly Revenue is required'),
     deliveryTime: Yup.string().required('Delivery Time is required'),
@@ -39,22 +54,31 @@ export default function ShippingOperations() {
   });
 
   const defaultValues = {
+    storeName: user?.storeName || '',
     postalService: user?.postalService || '',
     monthlyRevenue: user?.monthlyRevenue || '',
     deliveryTime: user?.deliveryTime || '',
     fulfilmentMethod: user?.fulfilmentMethod || '',
     numberOfEmployees: user?.numberOfEmployees || '',
-    country: '',
-    address: '',
-    state: '',
-    city: '',
-    zipCode: '',
+    country: user?.country || '',
+    address: user?.address || '',
+    state: user?.state || '',
+    city: user?.city || '',
+    zipCode: user?.zipCode || '',
   };
 
   const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
     defaultValues,
   });
+
+  const defaultSocialLinks = '';
+
+  const socialLinks = {
+    facebook: defaultSocialLinks.facebook,
+    instagram: defaultSocialLinks.instagram,
+    twitter: defaultSocialLinks.twitter,
+  };
 
   const {
     setValue,
@@ -67,12 +91,10 @@ export default function ShippingOperations() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       enqueueSnackbar('Update success!');
       console.info('DATA', data);
-      onSubmit(data); // Call onSubmit function passed from the parent component
     } catch (error) {
       console.error(error);
     }
   });
-
 
 
   return (
@@ -80,31 +102,26 @@ export default function ShippingOperations() {
         <Grid container spacing={2}>
 
           <Grid item xs={12}>
-            <Typography variant="h6">Shipping & Operations</Typography>
+            <Typography variant="h6">Company Information</Typography>
           </Grid>
 
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={4}>
-                  <RHFTextField name="postalService" label="Postal Service Type" />
+                  <RHFTextField name="companyName" label="Company Name" />
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFTextField name="monthlyRevenue" label="Monthly Revenue" />
+                  <RHFTextField name="companyEmail" label="Company Email" />
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFAutocomplete
-                      name="deliveryTime"
-                      label="Average Delivery Time"
-                      options={['1-2 days', '3-5 days', '6+ days']} // Example options
-                  />
+                  <RHFTextField name="companyPhone" label="Company Phone Number" />
                 </Grid>
                 <Grid item xs={4}>
-                  <RHFAutocomplete
-                      name="fulfillmentMethod"
-                      label="Fulfillment Method"
-                      options={['3PL', 'In-House', 'Other']} // Example options
-                  />
+                  <RHFTextField name="companyWebsite" label="Company Website" />
+                </Grid>
+                <Grid item xs={4}>
+                  <RHFTextField name="jobTitle" label="Your Job Title" />
                 </Grid>
                 <Grid item xs={4}>
                   <RHFAutocomplete
@@ -119,27 +136,14 @@ export default function ShippingOperations() {
 
 
           <Grid item xs={12} mt={3}>
-            <Typography variant="h6">Warehouse Location</Typography>
+            <Typography variant="h6">Company Registration</Typography>
           </Grid>
 
           <Grid item xs={12}>
             <Card sx={{ p: 3 }}>
               <Grid container spacing={3}>
                 <Grid item xs={4}>
-                  <RHFTextField name="address" label="Address" />
-                </Grid>
-                <Grid item xs={4}>
-                  <RHFTextField name="city" label="City" />
-                </Grid>
-                <Grid item xs={4}>
-                  <RHFAutocomplete
-                      name="state"
-                      label="State"
-                      options={states} // Example options
-                  />
-                </Grid>
-                <Grid item xs={4}>
-                  <RHFTextField name="zipCode" label="Zip/Code" />
+                  <RHFTextField name="taxId" label="U.S. Tax ID (EIN)" />
                 </Grid>
                 <Grid item xs={4}>
                   <RHFAutocomplete
@@ -151,12 +155,49 @@ export default function ShippingOperations() {
                       getOptionLabel={(option) => option}
                   />
                 </Grid>
-                <Grid container item xs={12} justifyContent="flex-end">
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Save Changes
-                  </LoadingButton>
+                <Grid item xs={4}>
+                  <RHFTextField name="taxClassification" label="Tax Classification (eg. W9)" />
                 </Grid>
               </Grid>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} mt={3}>
+            <Typography variant="h6">Social Links</Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Card sx={{ p: 3 }}>
+                  <Stack component={Card} spacing={3} sx={{ p: 3 }}>
+                    {Object.keys(socialLinks).map((link) => (
+                        <RHFTextField
+                            key={link}
+                            name={link}
+                            defaultValue={'https://www.instagram.com/'}
+                            InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position="start">
+                                    <Iconify
+                                        width={24}
+                                        icon={
+                                            (link === 'facebook' && 'eva:facebook-fill') ||
+                                            (link === 'instagram' && 'ant-design:instagram-filled') ||
+                                            (link === 'twitter' && 'eva:twitter-fill') ||
+                                            ''
+                                        }
+                                        color={
+                                            (link === 'facebook' && '#1877F2') ||
+                                            (link === 'instagram' && '#DF3E30') ||
+                                            (link === 'twitter' && '#1C9CEA') ||
+                                            ''
+                                        }
+                                    />
+                                  </InputAdornment>
+                              ),
+                            }}
+                        />
+                    ))}
+                  </Stack>
             </Card>
           </Grid>
 

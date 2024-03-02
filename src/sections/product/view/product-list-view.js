@@ -2,6 +2,7 @@
 
 import isEqual from 'lodash/isEqual';
 import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -47,40 +48,15 @@ import {
 
 const mockProducts = [
   {
-    id: 1,
-    name: 'Product A',
-    createdAt: 'Accessories',
-    available: 75,
-    inventoryType: 'In Stock',
-    price: 49.99,
-    status: 'active',
-  },
-  {
     id: 2,
-    name: 'Product B',
-    createdAt: 'Accessories',
-    available: 75,
-    inventoryType: 'Out of Stock',
-    price: 29.99,
-    status: 'pending',
-  },
-  {
-    id: 3,
-    name: 'Product C',
-    createdAt: 'Accessories',
-    available: 75,
-    inventoryType: 'In Stock',
-    price: 39.99,
-    status: 'rejected',
-  },
-  {
-    id: 4,
-    name: 'Product D',
-    createdAt: 'Accessories',
-    available: 75,
-    inventoryType: 'Out of Stock',
-    price: 59.99,
-    status: 'active',
+    path: ['Sarah'],
+    title: 'Product A',
+    category: 'Accessories',
+    total_inventory: 75,
+    image: "https://cdn.shopify.com/s/files/1/0845/1729/0280/files/ducktoy.webp?v=1706391484",
+    inventory_status: 'In Stock',
+    price: 49.99,
+    approval_status: 'active',
   },
 ];
 
@@ -113,6 +89,8 @@ export default function ProductListView() {
 
   const { products, productsLoading } = useGetProducts();
 
+  const [productsResponse, setProductsResponse] = useState([]);
+
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
@@ -120,6 +98,31 @@ export default function ProductListView() {
   const [selectedRowIds, setSelectedRowIds] = useState([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
+
+  const fetchProductsData = async () => {
+    try {
+      // Make API call to fetch products with query parameters
+      const response = await axios.get('http://localhost:3000/products', {
+        params: {
+          importStatus: true, // or false depending on your requirement
+        },
+      });
+      // Extract products data from the response
+      const productsData = response.data;
+      // Set products state with fetched data
+      setProductsResponse(productsData);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  // Fetch products data when the component mounts
+  useEffect(() => {
+    fetchProductsData();
+  }, []);
+
+  console.log('Products', productsResponse);
+
 
   useEffect(() => {
     if (products.length) {
@@ -180,10 +183,10 @@ export default function ProductListView() {
 
   const columns = [
     {
-      field: 'name',
+      field: 'title',
       headerName: 'Product',
       flex: 1,
-      minWidth: 360,
+      minWidth: 160,
       hideable: false,
       renderCell: (params) => <RenderCellProduct params={params} />,
     },
@@ -194,7 +197,7 @@ export default function ProductListView() {
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
-      field: 'inventoryType',
+      field: 'inventory_status',
       headerName: 'Stock',
       width: 160,
       type: 'singleSelect',
@@ -209,7 +212,7 @@ export default function ProductListView() {
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: 'status',
+      field: 'approval_status',
       headerName: 'Status',
       width: 110,
       type: 'singleSelect',
@@ -307,7 +310,7 @@ export default function ProductListView() {
           <DataGrid
             checkboxSelection
             disableRowSelectionOnClick
-            rows={mockProducts}
+            rows={productsResponse}
             columns={columns}
             loading={productsLoading}
             getRowHeight={() => 'auto'}
