@@ -55,30 +55,25 @@ function ShippingAndOperations({ onNext, onBack, onSubmitFinal, setFormData, for
                         <Card sx={{ p: 3 }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={4}>
-                                    <RHFTextField name="postalService" label="Postal Service Type" />
+                                    <RHFTextField name="postalService" label="Postal Service Type" required/>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <RHFTextField name="monthlyRevenue" label="Monthly Revenue" />
+                                    <RHFTextField name="monthlyRevenue" label="Monthly Revenue" defaultValue={'$'} required/>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <RHFAutocomplete
                                         name="deliveryTime"
                                         label="Average Delivery Time"
-                                        options={['1-2 days', '3-5 days', '6+ days']} // Example options
+                                        options={['1-2 days', '3-5 days', '6+ days']}
+                                        required
                                     />
                                 </Grid>
                                 <Grid item xs={4}>
                                     <RHFAutocomplete
                                         name="fulfillmentMethod"
                                         label="Fulfillment Method"
-                                        options={['3PL', 'In-House', 'Other']} // Example options
-                                    />
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <RHFAutocomplete
-                                        name="numberOfEmployees"
-                                        label="Number of Employees"
-                                        options={['1-10', '11-50', '51-100', '101+']} // Example options
+                                        options={['3PL', 'In-House', 'Other']}
+                                        required
                                     />
                                 </Grid>
                             </Grid>
@@ -94,20 +89,24 @@ function ShippingAndOperations({ onNext, onBack, onSubmitFinal, setFormData, for
                         <Card sx={{ p: 3 }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={4}>
-                                    <RHFTextField name="address" label="Address" />
+                                    <RHFTextField name="address1" label="Address" required/>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <RHFTextField name="city" label="City" />
+                                    <RHFTextField name="address2" label="Address 2"/>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <RHFTextField name="city" label="City" required/>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <RHFAutocomplete
                                         name="state"
                                         label="State"
-                                        options={states} // Example options
+                                        options={states}
+                                        required
                                     />
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <RHFTextField name="zipCode" label="Zip/Code" />
+                                    <RHFTextField name="zipCode" label="Zip/Code" required/>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <RHFAutocomplete
@@ -117,6 +116,7 @@ function ShippingAndOperations({ onNext, onBack, onSubmitFinal, setFormData, for
                                         placeholder="Choose a country"
                                         options={countries.map((option) => option.label)}
                                         getOptionLabel={(option) => option}
+                                        required
                                     />
                                 </Grid>
                             </Grid>
@@ -125,13 +125,17 @@ function ShippingAndOperations({ onNext, onBack, onSubmitFinal, setFormData, for
 
                 </Grid>
             </Paper>
-            <Button variant="contained" type="submit">
-                Submit
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant="outlined" onClick={handleBack}>
+                    Back
+                </Button>
+                <div style={{ textAlign: 'right' }}>
+                    <Button variant="contained" type="submit">
+                        Submit
+                    </Button>
+                </div>
+            </div>
         </form>
-        <Button variant="contained" onClick={handleBack}>
-            Back
-        </Button>
     </FormProvider>
     );
 }

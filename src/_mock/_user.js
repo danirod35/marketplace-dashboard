@@ -15,7 +15,7 @@ export const _userAbout = {
   id: _mock.id(1),
   role: _mock.role(1),
   email: _mock.email(1),
-  country: countries[1].label,
+  // country: countries[1].label,
   school: _mock.companyName(2),
   company: _mock.companyName(1),
   coverUrl: _mock.image.cover(3),
@@ -34,7 +34,7 @@ export const _userAbout = {
 export const _userFollowers = [...Array(18)].map((_, index) => ({
   id: _mock.id(index),
   name: _mock.fullName(index),
-  country: countries[index + 1].label,
+  // country: countries[index + 1].label,
   avatarUrl: _mock.image.avatar(index),
 }));
 
@@ -149,7 +149,7 @@ export const _userList = [...Array(20)].map((_, index) => ({
   name: _mock.fullName(index),
   isVerified: _mock.boolean(index),
   company: _mock.companyName(index),
-  country: countries[index + 1].label,
+  // country: countries[index + 1].label,
   avatarUrl: _mock.image.avatar(index),
   phoneNumber: _mock.phoneNumber(index),
   status:

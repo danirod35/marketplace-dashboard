@@ -27,14 +27,17 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   // -------------------------------------------------------
     const logo = (
         <Box
+            ref={ref}
+            component="div"
             sx={{
-                height:'150px',
-                // py: { xs: 10, md: 0 },
-                overflow: 'hidden',
-                position: 'relative',
+              width: 180,
+              height: 'auto',
+              display: 'inline-flex',
+              ...sx,
             }}
+            {...other}
         >
-            {/*<Image src="/assets/images/faqs/HeyBuddyShopLogo.png" alt="Logo" width='100' height='100' />*/}
+            <Image src="/assets/images/faqs/HeyBuddyShopLogo.png" alt="Logo" width='210' height='80' />
         </Box>
     );
 

@@ -82,12 +82,12 @@ export default function Footer() {
 
       <Container
         sx={{
-          pt: 10,
+          pt: 5,
           pb: 5,
           textAlign: { xs: 'center', md: 'unset' },
         }}
       >
-        <Logo sx={{ mb: 3 }} />
+        <Logo sx={{ mb: 2 }} />
 
         <Grid
           container
