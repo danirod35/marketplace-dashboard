@@ -1,9 +1,9 @@
-import { UserCreateView } from 'src/sections/user/view';
+import { UserCreateView } from 'src/sections/storefront/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create a new user',
+  title: 'Dashboard: Create a new storefront',
 };
 
 export default function UserCreatePage() {

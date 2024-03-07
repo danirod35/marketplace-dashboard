@@ -19,7 +19,7 @@ import AccountBilling from '../account-billing';
 import AccountSocialLinks from '../account-social-links';
 import AccountNotifications from '../account-notifications';
 import AccountChangePassword from '../account-change-password';
-import UserNewEditForm from "../../user/user-new-edit-form";
+import UserNewEditForm from "../../storefront/user-new-edit-form";
 
 // ----------------------------------------------------------------------
 

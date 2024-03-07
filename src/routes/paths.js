@@ -17,7 +17,7 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
-  newUserApplication: '/new-user-application',
+  newUserApplication: '/new-storefront-application',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   pricing: '/pricing',

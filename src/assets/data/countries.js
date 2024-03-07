@@ -1,3 +1,8 @@
+export const country = [
+    'United States'
+];
+
+
 export const countries = [
   // { code: '', label: '', phone: '' },
   // { code: 'AD', label: 'Andorra', phone: '376' },

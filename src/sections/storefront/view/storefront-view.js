@@ -13,21 +13,17 @@ import { paths } from 'src/routes/paths';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from 'src/_mock';
+import { _userAbout } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import ProfileHome from '../profile-home';
 import ProfileCover from '../profile-cover';
-import ProfileFriends from '../profile-friends';
-import ProfileGallery from '../profile-gallery';
-import ProfileFollowers from '../profile-followers';
-import AccountGeneral from "../../account/account-general";
-import ShippingOperations from "../../account/shipping-operations";
-import StorePolicies from "../../account/store-policies";
-import AccountSocialLinks from "../../account/account-social-links";
+import StoreInfoForm from "../storefront-components/store-info-form";
+import ShippingOperationsForm from "../storefront-components/shipping-operations-form";
+import StorePoliciesForm from "../storefront-components/store-policies-form";
+import SocialLinksForm from "../storefront-components/social-links";
 
 import StoreIcon from '@mui/icons-material/Store';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -38,12 +34,12 @@ import LinkIcon from '@mui/icons-material/Link';
 
 const TABS = [
   {
-    value: 'profile',
+    value: 'storeInfo',
     label: 'Store Info',
     icon: <StoreIcon/>,
   },
   {
-    value: 'followers',
+    value: 'shippingAndOperations',
     label: 'Shipping & Operations',
     icon: <LocalShippingIcon/>,
   },
@@ -53,7 +49,7 @@ const TABS = [
     icon: <FeedIcon/>,
   },
   {
-    value: 'gallery',
+    value: 'socialLinks',
     label: 'Social Links',
     icon: <LinkIcon/>,
   },
@@ -61,35 +57,39 @@ const TABS = [
 
 // ----------------------------------------------------------------------
 
-export default function UserProfileView() {
+export default function StorefrontView() {
+
+  const store = {
+    storeName: "Pets Project",
+    store_banner_image: '',
+    store_logo: '/assets/images/faqs/HeyBuddyShopLogo.png',
+    city: 'Miami',
+    state: 'Florida'
+  };
+
   const settings = useSettingsContext();
 
-  const { user } = useMockedUser();
-
-  const [searchFriends, setSearchFriends] = useState('');
-
-  const [currentTab, setCurrentTab] = useState('profile');
+  const [currentTab, setCurrentTab] = useState('storeInfo');
+  const [avatarUrl, setAvatarUrl] = useState(store.store_logo); // Initial avatar URL
 
   const handleChangeTab = useCallback((event, newValue) => {
     setCurrentTab(newValue);
   }, []);
 
-  const handleSearchFriends = useCallback((event) => {
-    setSearchFriends(event.target.value);
-  }, []);
+  const handleAvatarChange = (file) => {
+    const newAvatarUrl = URL.createObjectURL(file);
+    console.log('newAvatarURL', newAvatarUrl);
+    setAvatarUrl(newAvatarUrl);
+  };
+
 
   return (
       <StorefrontPhotoProvider>
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Profile"
-        links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Storefront', href: paths.dashboard.user.root },
-          { name: user?.displayName },
-        ]}
+        heading="Storefront"
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: 2,
         }}
       />
 
@@ -100,10 +100,12 @@ export default function UserProfileView() {
         }}
       >
         <ProfileCover
-          role={_userAbout.role}
-          name={user?.displayName}
-          avatarUrl={user?.photoURL}
-          coverUrl={_userAbout.coverUrl}
+          name={store.storeName}
+          avatarUrl={avatarUrl}
+          coverUrl={store.store_banner_image}
+          city={store.city}
+          state={store.state}
+          onAvatarChange={handleAvatarChange} // Pass the handleAvatarChange function as a prop
         />
 
         <Tabs
@@ -130,13 +132,13 @@ export default function UserProfileView() {
         </Tabs>
       </Card>
 
-      {currentTab === 'profile' && <AccountGeneral />}
+      {currentTab === 'storeInfo' && <StoreInfoForm />}
 
-      {currentTab === 'followers' && <ShippingOperations/>}
+      {currentTab === 'shippingAndOperations' && <ShippingOperationsForm/>}
 
-      {currentTab === 'policies' && <StorePolicies/>}
+      {currentTab === 'policies' && <StorePoliciesForm/>}
 
-      {currentTab === 'gallery' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}
+      {currentTab === 'socialLinks' && <SocialLinksForm/>}
     </Container>
       </StorefrontPhotoProvider>
   );

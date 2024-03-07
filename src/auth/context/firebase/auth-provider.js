@@ -104,14 +104,14 @@ export function AuthProvider({ children }) {
 
   /*
    * (1) If skip emailVerified
-   * Remove the condition (if/else) : user.emailVerified
+   * Remove the condition (if/else) : storefront.emailVerified
    */
   /*
   const initialize = useCallback(() => {
     try {
-      onAuthStateChanged(AUTH, async (user) => {
-        if (user) {
-          const userProfile = doc(DB, 'users', user.uid);
+      onAuthStateChanged(AUTH, async (storefront) => {
+        if (storefront) {
+          const userProfile = doc(DB, 'users', storefront.uid);
 
           const docSnap = await getDoc(userProfile);
 
@@ -120,10 +120,10 @@ export function AuthProvider({ children }) {
           dispatch({
             type: Types.INITIAL,
             payload: {
-              user: {
-                ...user,
+              storefront: {
+                ...storefront,
                 ...profile,
-                id: user.uid,
+                id: storefront.uid,
                 role: 'admin',
               },
             },
@@ -132,7 +132,7 @@ export function AuthProvider({ children }) {
           dispatch({
             type: Types.INITIAL,
             payload: {
-              user: null,
+              storefront: null,
             },
           });
         }
@@ -142,7 +142,7 @@ export function AuthProvider({ children }) {
       dispatch({
         type: Types.INITIAL,
         payload: {
-          user: null,
+          storefront: null,
         },
       });
     }
@@ -182,7 +182,7 @@ export function AuthProvider({ children }) {
 
     /*
      * (1) If skip emailVerified
-     * Remove : await sendEmailVerification(newUser.user);
+     * Remove : await sendEmailVerification(newUser.storefront);
      */
     await sendEmailVerification(newUser.user);
 
@@ -209,7 +209,7 @@ export function AuthProvider({ children }) {
 
   /*
    * (1) If skip emailVerified
-   * const checkAuthenticated = state.user?.emailVerified ? 'authenticated' : 'unauthenticated';
+   * const checkAuthenticated = state.storefront?.emailVerified ? 'authenticated' : 'unauthenticated';
    */
   const checkAuthenticated = state.user?.emailVerified ? 'authenticated' : 'unauthenticated';
 

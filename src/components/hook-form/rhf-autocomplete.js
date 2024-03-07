@@ -12,7 +12,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function RHFAutocomplete({ name, label, type, helperText, placeholder, ...other }) {
+export default function RHFAutocomplete({ name, label, type, defaultValue, helperText, placeholder, ...other }) {
   const { control, setValue } = useFormContext();
 
   const { multiple } = other;
@@ -27,6 +27,7 @@ export default function RHFAutocomplete({ name, label, type, helperText, placeho
             <Autocomplete
               {...field}
               id={`autocomplete-${name}`}
+              // value={field.value || defaultValue}
               autoHighlight={!multiple}
               disableCloseOnSelect={multiple}
               onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
@@ -113,16 +114,20 @@ export default function RHFAutocomplete({ name, label, type, helperText, placeho
         }
 
         return (
-          <Autocomplete
-            {...field}
-            id={`autocomplete-${name}`}
-            onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+            <Autocomplete
+                {...field}
+                id={`autocomplete-${name}`}
+                value={field.value || defaultValue} // Use defaultValue if field.value is null/undefined
+                autoHighlight={!multiple}
+                disableCloseOnSelect={multiple}
+                onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label={label}
                 placeholder={placeholder}
                 error={!!error}
+                InputLabelProps={{ shrink: true }}
                 helperText={error ? error?.message : helperText}
                 inputProps={{
                   ...params.inputProps,

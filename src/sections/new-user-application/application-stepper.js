@@ -32,7 +32,7 @@ function ApplicationStepper() {
     };
 
     const handleFinalSubmit = (finalFormValues) => {
-        axios.post('http://localhost:3000/store-create', [finalFormValues])
+        axios.post('http://localhost:3000/store/create', [finalFormValues])
             .then(response => {
                 console.log('Form submitted successfully:', response.data);
             })

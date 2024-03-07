@@ -34,7 +34,7 @@ const MAX_AMOUNT = 25;
 
 // ----------------------------------------------------------------------
 
-export default function BankingQuickTransfer({ title, subheader, sx, ds, onChange, ...other }) {
+export default function DiscountSlider({ title, subheader, sx, ds, onChange, ...other }) {
 
   const [autoWidth, setAutoWidth] = useState(24);
 
@@ -122,7 +122,7 @@ export default function BankingQuickTransfer({ title, subheader, sx, ds, onChang
   );
 }
 
-BankingQuickTransfer.propTypes = {
+DiscountSlider.propTypes = {
   subheader: PropTypes.string,
   sx: PropTypes.object,
   title: PropTypes.string,

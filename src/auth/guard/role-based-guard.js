@@ -13,10 +13,10 @@ import { varBounce, MotionContainer } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export default function RoleBasedGuard({ hasContent, roles, children, sx }) {
-  // Logic here to get current user role
+  // Logic here to get current storefront role
   const { user } = useMockedUser();
 
-  // const currentRole = 'user';
+  // const currentRole = 'storefront';
   const currentRole = user?.role; // admin;
 
   if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {

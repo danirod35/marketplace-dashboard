@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import { _userList } from 'src/_mock/_user';
 
-import { UserEditView } from 'src/sections/user/view';
+import { UserEditView } from 'src/sections/storefront/view';
 
 // ----------------------------------------------------------------------
 
