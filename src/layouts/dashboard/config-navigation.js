@@ -248,7 +248,7 @@ export function useNavData() {
           //   caption: t('only_admin_can_see_this_item'),
           // },
           { title: t('Profile Settings'), path: paths.dashboard.user.account, icon: ICONS.user, roles: ['admin', 'user'],},
-          { title: t('Company Settings'), path: paths.dashboard.user.account, icon: <PolicyIcon/>, roles: ['admin', 'user'],},
+          { title: t('Company Settings'), path: paths.dashboard.user.companySettings, icon: <PolicyIcon/>, roles: ['admin', 'user'],},
           // {
           //   title: t('menu_level'),
           //   path: '#/dashboard/menu_level',

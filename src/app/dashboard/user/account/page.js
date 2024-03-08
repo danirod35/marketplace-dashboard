@@ -1,11 +1,11 @@
-import { AccountView } from 'src/sections/account/view';
+import UserProfileSettings from "../../../../sections/user-profile-settings/view/user-account-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Account Settings',
+  title: 'User Profile Settings',
 };
 
-export default function AccountPage() {
-  return <AccountView />;
+export default function UserSettings() {
+  return <UserProfileSettings />;
 }

@@ -113,7 +113,7 @@ export default function MenuView() {
               Open Menu
             </Button>
             <Menu id="simple-menu" anchorEl={isOpen} onClose={handleClose} open={Boolean(isOpen)}>
-              {['Profile', 'My account', 'Logout'].map((option) => (
+              {['Profile', 'My user-profile-settings', 'Logout'].map((option) => (
                 <MenuItem key={option} selected={option === 'Profile'} onClick={handleClose}>
                   {option}
                 </MenuItem>

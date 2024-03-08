@@ -19,7 +19,8 @@ import AccountBilling from '../account-billing';
 import AccountSocialLinks from '../account-social-links';
 import AccountNotifications from '../account-notifications';
 import AccountChangePassword from '../account-change-password';
-import UserNewEditForm from "../../storefront/user-new-edit-form";
+import UserInfoForm from "../user-info-form";
+import WalktourView from "../../_examples/extra/walktour-view";
 
 // ----------------------------------------------------------------------
 
@@ -28,11 +29,6 @@ const TABS = [
     value: 'general',
     label: 'General',
     icon: <Iconify icon="solar:user-id-bold" width={24} />,
-  },
-  {
-    value: 'billing',
-    label: 'Billing',
-    icon: <Iconify icon="solar:bill-list-bold" width={24} />,
   },
   {
     value: 'notifications',
@@ -48,7 +44,7 @@ const TABS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountView() {
+export default function UserProfileSettings() {
   const settings = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('general');
@@ -64,12 +60,7 @@ export default function AccountView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Account"
-        links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User', href: paths.dashboard.user.root },
-          { name: 'Account' },
-        ]}
+        heading="User Profile Settings"
         sx={{
           mb: { xs: 3, md: 5 },
         }}
@@ -87,16 +78,7 @@ export default function AccountView() {
         ))}
       </Tabs>
 
-      {currentTab === 'general' && <UserNewEditForm />}
-
-      {currentTab === 'billing' && (
-        <AccountBilling
-          plans={_userPlans}
-          cards={_userPayment}
-          invoices={_userInvoices}
-          addressBook={_userAddressBook}
-        />
-      )}
+      {currentTab === 'general' && <UserInfoForm />}
 
       {currentTab === 'notifications' && <AccountNotifications />}
 

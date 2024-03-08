@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useMemo, useCallback } from 'react';
+import {useMemo, useCallback, useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -29,15 +29,19 @@ import FormProvider, {
   RHFUploadAvatar,
   RHFAutocomplete,
 } from 'src/components/hook-form';
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
-export default function UserNewEditForm({ currentUser }) {
+export default function UserInfoForm({ currentUser }) {
   const router = useRouter();
+
+    const [store, setStore] = useState({});
+    const [loading, setLoading] = useState(true);
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewUserSchema = Yup.object().shape({
+  const UserInfoFormSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phoneNumber: Yup.string().required('Phone number is required'),
@@ -55,12 +59,31 @@ export default function UserNewEditForm({ currentUser }) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewUserSchema),
+    resolver: yupResolver(UserInfoFormSchema),
     defaultValues,
   });
 
+    useEffect(() => {
+        const storeId = 1; // Replace 1 with the variable or parameter holding the store ID
+        const fetchStoreData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/store/get/${storeId}`);
+                setStore(response.data[0]);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching store:', error);
+            }
+        };
+
+        fetchStoreData();
+    }, []);
+
+    useEffect(() => {
+        methods.reset(store);
+        console.log('mystore', store)
+    }, [store, methods]);
+
   const {
-    reset,
     watch,
     control,
     setValue,
@@ -72,11 +95,10 @@ export default function UserNewEditForm({ currentUser }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.user.list);
-      console.info('DATA', data);
+      const storeId = 1; // Replace 1 with the appropriate storeId value
+      const response = await axios.put(`http://localhost:3000/store/update/${storeId}`, { store: data });
+      console.log('Store Info updated successfully:', response.data);
+      enqueueSnackbar('Update success!');
     } catch (error) {
       console.error(error);
     }
@@ -151,8 +173,8 @@ export default function UserNewEditForm({ currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Full Name"/>
-              <RHFTextField name="email" label="Email Address"/>
+              <RHFTextField name="name" label="Full Name" />
+              <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
             </Box>
 
@@ -168,6 +190,6 @@ export default function UserNewEditForm({ currentUser }) {
   );
 }
 
-UserNewEditForm.propTypes = {
+UserInfoForm.propTypes = {
   currentUser: PropTypes.object,
 };

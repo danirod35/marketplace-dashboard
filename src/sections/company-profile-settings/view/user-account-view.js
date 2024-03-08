@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import {useState, useCallback, useEffect} from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -19,14 +19,14 @@ import AccountBilling from '../account-billing';
 import AccountSocialLinks from '../account-social-links';
 import AccountNotifications from '../account-notifications';
 import AccountChangePassword from '../account-change-password';
-import UserNewEditForm from "../../storefront/user-new-edit-form";
-
+import CompanyInfoForm from "../company-info-form";
+import axios from "axios";
 // ----------------------------------------------------------------------
 
 const TABS = [
   {
     value: 'general',
-    label: 'General',
+    label: 'Company Info',
     icon: <Iconify icon="solar:user-id-bold" width={24} />,
   },
   {
@@ -39,16 +39,11 @@ const TABS = [
     label: 'Notifications',
     icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
   },
-  {
-    value: 'security',
-    label: 'Change Password',
-    icon: <Iconify icon="ic:round-vpn-key" width={24} />,
-  },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function AccountView() {
+export default function CompanyProfileSettings() {
   const settings = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('general');
@@ -64,12 +59,7 @@ export default function AccountView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Account"
-        links={[
-          { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'User', href: paths.dashboard.user.root },
-          { name: 'Account' },
-        ]}
+        heading="Company Profile Settings"
         sx={{
           mb: { xs: 3, md: 5 },
         }}
@@ -87,7 +77,7 @@ export default function AccountView() {
         ))}
       </Tabs>
 
-      {currentTab === 'general' && <UserNewEditForm />}
+      {currentTab === 'general' && <CompanyInfoForm/>}
 
       {currentTab === 'billing' && (
         <AccountBilling
@@ -100,8 +90,6 @@ export default function AccountView() {
 
       {currentTab === 'notifications' && <AccountNotifications />}
 
-
-      {currentTab === 'security' && <AccountChangePassword />}
     </Container>
   );
 }

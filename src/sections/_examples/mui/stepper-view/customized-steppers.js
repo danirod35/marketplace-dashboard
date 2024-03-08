@@ -14,9 +14,9 @@ import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector
 import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
-import StoreInfo from "../../../account/store-info";
-import ShippingOperations from "../../../account/shipping-operations";
-import ApplicationComplete from "../../../account/application-complete";
+import StoreInfo from "../../../user-profile-settings/store-info";
+import ShippingOperations from "../../../user-profile-settings/shipping-operations";
+import ApplicationComplete from "../../../user-profile-settings/application-complete";
 
 // ----------------------------------------------------------------------
 

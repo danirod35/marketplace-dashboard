@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import ConnectToShopifyDialog from "../connect-to-shopify-dialog";
 
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
@@ -42,19 +44,56 @@ import Stack from "@mui/material/Stack";
 import AppWidget from "../../app/app-widget";
 import BookingWidgetSummary from "../../booking/booking-widget-summary";
 import AnalyticsTasks from "../../analytics/analytics-tasks";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
 export default function OverviewEcommerceView() {
   const { user } = useMockedUser();
+  const [store, setStore] = useState({});
+  const [openDialog, setOpenDialog] = useState(false); // State to control the dialog visibility
+
 
   const theme = useTheme();
 
   const settings = useSettingsContext();
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  useEffect(() => {
+    const storeId = 1; // Replace 1 with the variable or parameter holding the store ID
+    const fetchStoreData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/store/get/${storeId}`);
+        setStore(response.data[0]);
+        if (!response.data[0]?.shopify_connection_status) {
+          setOpenDialog(true);
+        }
+      } catch (error) {
+        console.error('Error fetching store:', error);
+      }
+    };
+
+    fetchStoreData();
+  }, []);
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>Shopify Connection Required</DialogTitle>
+          <DialogContent>
+            <ConnectToShopifyDialog/>
+          </DialogContent>
+          <DialogActions>
+            {/*<Button onClick={handleCloseDialog} color="primary">*/}
+            {/*  Close*/}
+            {/*</Button>*/}
+          </DialogActions>
+        </Dialog>
         <Grid xs={12} md={8}>
           <EcommerceWelcome
             title={`Welcome to the \n HeyBuddy Shop!`}

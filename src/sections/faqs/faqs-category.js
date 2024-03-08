@@ -22,7 +22,7 @@ import { varFade, MotionViewport } from 'src/components/animate';
 
 const CATEGORIES = [
   {
-    label: 'Managing your account',
+    label: 'Managing your user-profile-settings',
     icon: '/assets/icons/faqs/ic_account.svg',
     href: '#',
   },
