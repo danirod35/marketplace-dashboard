@@ -1,9 +1,10 @@
 'use client';
 
 import * as Yup from 'yup';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createClient } from '@supabase/supabase-js';
 
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
@@ -23,11 +24,13 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import NProgress from "nprogress";
 
 // ----------------------------------------------------------------------
 
-export default function FirebaseRegisterView() {
-  const { register } = useAuthContext();
+export default function SupabaseRegisterView() {
+
+  const { register, user } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -60,9 +63,13 @@ export default function FirebaseRegisterView() {
     formState: { isSubmitting },
   } = methods;
 
+
+
   const onSubmit = handleSubmit(async (data) => {
     try {
+
       await register?.(data.email, data.password, data.firstName, data.lastName);
+
       const searchParams = new URLSearchParams({
         email: data.email,
       }).toString();

@@ -7,6 +7,7 @@ import { paths } from 'src/routes/paths';
 
 import { supabase } from './lib';
 import { AuthContext } from './auth-context';
+import axios, {endpoints} from "../../../utils/axios";
 
 // ----------------------------------------------------------------------
 /**
@@ -148,7 +149,8 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (email, password, firstName, lastName) => {
-    const { error } = await supabase.auth.signUp({
+    console.log('hi im in register in auth provider!')
+    const { user, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -158,6 +160,8 @@ export function AuthProvider({ children }) {
         },
       },
     });
+
+    console.log('user', user)
 
     if (error) {
       console.error(error);

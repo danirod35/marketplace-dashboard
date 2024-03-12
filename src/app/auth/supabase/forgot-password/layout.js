@@ -2,12 +2,12 @@
 
 import PropTypes from 'prop-types';
 
-import CompactLayout from 'src/layouts/compact';
+import AuthModernLayout from "../../../../layouts/auth/modern";
 
 // ----------------------------------------------------------------------
 
 export default function Layout({ children }) {
-  return <CompactLayout>{children}</CompactLayout>;
+  return <AuthModernLayout>{children}</AuthModernLayout>;
 }
 
 Layout.propTypes = {

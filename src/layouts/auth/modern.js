@@ -48,7 +48,7 @@ export default function AuthModernLayout({ children, image }) {
       <Box
         component="img"
         alt="auth"
-        src={image || '/assets/background/overlay_3.jpg'}
+        src={image || '/assets/images/HeyBuddyAuthBanner1.jpg'}
         sx={{
           top: 16,
           left: 16,
@@ -56,6 +56,8 @@ export default function AuthModernLayout({ children, image }) {
           position: 'absolute',
           width: 'calc(100% - 32px)',
           height: 'calc(100% - 32px)',
+          borderRadius: '8px', // Adjust the value as needed to change the roundness
+
         }}
       />
     </Stack>

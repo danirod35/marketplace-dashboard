@@ -92,8 +92,6 @@ export default function SupabaseForgotPasswordView() {
 
   const renderHead = (
     <>
-      <PasswordIcon sx={{ height: 96 }} />
-
       <Stack spacing={1} sx={{ mt: 3, mb: 5 }}>
         <Typography variant="h3">Forgot your password?</Typography>
 

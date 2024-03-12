@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -35,9 +35,14 @@ AuthGuard.propTypes = {
 function Container({ children }) {
   const router = useRouter();
 
-  const { authenticated, method } = useAuthContext();
+  const { authenticated } = useAuthContext();
 
   const [checked, setChecked] = useState(false);
+
+  const method = useMemo(() => {
+    // Determine the authentication method here based on your logic
+    return 'supabase'; // Or return the appropriate method dynamically
+  }, []);
 
   const check = useCallback(() => {
     if (!authenticated) {
@@ -46,8 +51,11 @@ function Container({ children }) {
       }).toString();
 
       const loginPath = loginPaths[method];
+      console.log('loginpath', loginPath);
+      console.log('method', method);
 
       const href = `${loginPath}?${searchParams}`;
+      console.log('href', method);
 
       router.replace(href);
     } else {

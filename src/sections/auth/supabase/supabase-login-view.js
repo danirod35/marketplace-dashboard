@@ -28,7 +28,7 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function SupabaseLoginView() {
-  const { login } = useAuthContext();
+  const { login, user } = useAuthContext();
 
   const router = useRouter();
 

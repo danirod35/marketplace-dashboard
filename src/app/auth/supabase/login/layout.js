@@ -3,14 +3,14 @@
 import PropTypes from 'prop-types';
 
 import { GuestGuard } from 'src/auth/guard';
-import AuthClassicLayout from 'src/layouts/auth/classic';
+import AuthModernLayout from "../../../../layouts/auth/modern";
 
 // ----------------------------------------------------------------------
 
 export default function Layout({ children }) {
   return (
     <GuestGuard>
-      <AuthClassicLayout>{children}</AuthClassicLayout>
+      <AuthModernLayout>{children}</AuthModernLayout>
     </GuestGuard>
   );
 }
