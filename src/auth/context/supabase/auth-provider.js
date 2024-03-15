@@ -157,11 +157,32 @@ export function AuthProvider({ children }) {
         emailRedirectTo: `${window.location.origin}${paths.dashboard.root}`,
         data: {
           display_name: `${firstName} ${lastName}`,
+          role: 'user',
+          application_status: 'incomplete',
         },
       },
     });
 
     console.log('user', user)
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+  }, []);
+
+  // Update User
+  const updateUser = useCallback(async (userId, storeId) => {
+    console.log('hi im in update user in auth provider!', userId)
+    const { data, error } = await supabase.auth.updateUser({
+      data: {
+        store_id: storeId,
+        application_status: 'complete',
+        avatar_url: "https://example.com/avatar.jpg",
+      },
+    });
+
+    console.log('data', data);
 
     if (error) {
       console.error(error);
@@ -215,8 +236,11 @@ export function AuthProvider({ children }) {
     () => ({
       user: {
         ...state.user,
-        role: 'admin',
+        role: 'user',
         displayName: `${state.user?.user_metadata.display_name}`,
+        // applicationStatus: 'complete',
+        // applicationStatus: `${state.user?.user_metadata.application_status}`,
+        storeId: `${state.user?.user_metadata.store_id}`,
       },
       method: 'supabase',
       loading: status === 'loading',
@@ -228,8 +252,9 @@ export function AuthProvider({ children }) {
       logout,
       forgotPassword,
       updatePassword,
+      updateUser
     }),
-    [forgotPassword, login, logout, updatePassword, register, state.user, status]
+    [forgotPassword, login, logout, updatePassword, register, state.user, status, updateUser]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

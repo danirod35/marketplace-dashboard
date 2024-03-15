@@ -110,8 +110,7 @@ function RejectedApplication({status}) {
 
 }
 
-export default function ApplicationComplete() {
-    const approvalStatus = 'pending'; // or 'rejected'
+export default function ApplicationComplete({ approvalStatus }) {
 
     if (approvalStatus === 'pending') {
         return (

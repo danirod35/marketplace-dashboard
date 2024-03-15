@@ -24,13 +24,13 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import NProgress from "nprogress";
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
 export default function SupabaseRegisterView() {
 
-  const { register, user } = useAuthContext();
+  const { register } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -65,7 +65,7 @@ export default function SupabaseRegisterView() {
 
 
 
-  const onSubmit = handleSubmit(async (data) => {
+    const onSubmit = handleSubmit(async (data) => {
     try {
 
       await register?.(data.email, data.password, data.firstName, data.lastName);

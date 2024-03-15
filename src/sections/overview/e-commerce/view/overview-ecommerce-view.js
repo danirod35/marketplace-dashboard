@@ -46,12 +46,18 @@ import BookingWidgetSummary from "../../booking/booking-widget-summary";
 import AnalyticsTasks from "../../analytics/analytics-tasks";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {useRouter} from "../../../../routes/hooks";
+import { paths } from 'src/routes/paths';
+import CircularProgress from "@mui/material/CircularProgress"; // Import the CircularProgress component
 
 // ----------------------------------------------------------------------
 
 export default function OverviewEcommerceView() {
   const { user } = useMockedUser();
+  const router = useRouter();
   const [store, setStore] = useState({});
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isDashboardVisible, setIsDashboardVisible] = useState(false); // Track whether to render the dashboard
   const [openDialog, setOpenDialog] = useState(false); // State to control the dialog visibility
 
 
@@ -64,13 +70,21 @@ export default function OverviewEcommerceView() {
   };
 
   useEffect(() => {
-    const storeId = 1; // Replace 1 with the variable or parameter holding the store ID
+    console.log('user', user);
+    console.log('userstatus', user.user_metadata.application_status);
+
     const fetchStoreData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/store/get/${storeId}`);
-        setStore(response.data[0]);
-        if (!response.data[0]?.shopify_connection_status) {
+        const response = await axios.get(`http://localhost:3000/store/get/${user.storeId}`);
+        const storeData = response?.data[0];
+        setStore(storeData);
+        if (user.user_metadata.application_status === 'incomplete' || storeData.approval_status === 'pending') {
+          router.push(paths.newUserApplication);
+        } else if (!storeData.shopify_connection_status) {
           setOpenDialog(true);
+          setIsDashboardVisible(false); // Hide dashboard if Shopify connection is required
+        } else {
+          setIsDashboardVisible(true); // Show dashboard if everything is complete
         }
       } catch (error) {
         console.error('Error fetching store:', error);
@@ -80,8 +94,15 @@ export default function OverviewEcommerceView() {
     fetchStoreData();
   }, []);
 
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      {isLoading ? ( // Render loading animation if isLoading is true
+          <Grid container justifyContent="center" alignItems="center" style={{ minHeight: "100vh" }}>
+            <CircularProgress />
+          </Grid>
+      ) : (
+          isDashboardVisible && (
       <Grid container spacing={3}>
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>Shopify Connection Required</DialogTitle>
@@ -212,8 +233,9 @@ export default function OverviewEcommerceView() {
         <Grid xs={12} md={4}>
           <BookingWidgetSummary title="Shopify Connection" total='Connected' icon={<CheckInIllustration />} />
         </Grid>
-
       </Grid>
+          )
+      )}
     </Container>
   );
 }

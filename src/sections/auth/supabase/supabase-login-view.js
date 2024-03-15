@@ -1,7 +1,7 @@
 'use client';
 
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -33,6 +33,7 @@ export default function SupabaseLoginView() {
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const searchParams = useSearchParams();
 
