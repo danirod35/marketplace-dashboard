@@ -190,6 +190,22 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // Update User
+  const updateUserMetadata = useCallback(async (userMetadata) => {
+    const { data, error } = await supabase.auth.updateUser({
+      data: userMetadata
+    });
+
+    console.log('updateUserMetadata', data);
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+  }, []);
+
+
+
   // LOGOUT
   const logout = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
@@ -252,9 +268,10 @@ export function AuthProvider({ children }) {
       logout,
       forgotPassword,
       updatePassword,
-      updateUser
+      updateUser,
+      updateUserMetadata
     }),
-    [forgotPassword, login, logout, updatePassword, register, state.user, status, updateUser]
+    [forgotPassword, login, logout, updatePassword, register, state.user, status, updateUser, updateUserMetadata]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

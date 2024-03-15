@@ -25,6 +25,7 @@ import { navConfig } from './config-navigation';
 import LoginButton from '../common/login-button';
 import HeaderShadow from '../common/header-shadow';
 import SettingsButton from '../common/settings-button';
+import LogoutButton from "../common/logout-button";
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,7 @@ export default function Header() {
           {/*  </Button>*/}
 
             {mdUp && <LoginButton />}
+            {mdUp && <LogoutButton />}
 
           {/*  <SettingsButton*/}
           {/*    sx={{*/}

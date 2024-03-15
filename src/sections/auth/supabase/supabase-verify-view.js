@@ -16,43 +16,42 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function SupabaseVerifyView() {
-  const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
+    const email = searchParams.get('email');
 
-  const email = searchParams.get('email');
+    const renderHead = (
+        <Box sx={{ textAlign: 'center' }}> {/* Wrap the content with Box and apply textAlign */}
+            <EmailInboxIcon sx={{ mb: 5, height: 96 }} />
 
-  const renderHead = (
-    <>
-      <EmailInboxIcon sx={{ mb: 5, height: 96 }} />
+            <Typography variant="h3" sx={{ mb: 1 }}>
+                Please check your email!
+            </Typography>
 
-      <Typography variant="h3" sx={{ mb: 1 }}>
-        Please check your email!
-      </Typography>
-
-      <Stack spacing={1} sx={{ color: 'text.secondary', typography: 'body2', mb: 5 }}>
-        <Box component="span"> We have sent a confirmation link to</Box>
-        <Box component="strong" sx={{ color: 'text.primary' }}>
-          {email}
+            <Stack spacing={1} sx={{ color: 'text.secondary', typography: 'body2', mb: 5 }}>
+                <Box component="span"> We have sent a confirmation link to</Box>
+                <Box component="strong" sx={{ color: 'text.primary' }}>
+                    {email}
+                </Box>
+                <Box component="div">Please check your inbox/spam.</Box>
+            </Stack>
         </Box>
-        <Box component="div">Please check your inbox/spam.</Box>
-      </Stack>
-    </>
-  );
+    );
 
-  return (
-    <>
-      {renderHead}
+    return (
+        <Box sx={{ textAlign: 'center' }}> {/* Wrap the content with Box and apply textAlign */}
+            {renderHead}
 
-      <Button
-        component={RouterLink}
-        href={paths.auth.supabase.login}
-        size="large"
-        color="inherit"
-        variant="contained"
-        startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
-        sx={{ alignSelf: 'center' }}
-      >
-        Return to Sign in
-      </Button>
-    </>
-  );
+            <Button
+                component={RouterLink}
+                href={paths.auth.supabase.login}
+                size="large"
+                color="inherit"
+                variant="contained"
+                startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
+            >
+                Return to Sign in
+            </Button>
+        </Box>
+    );
 }
+

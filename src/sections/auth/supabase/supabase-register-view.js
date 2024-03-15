@@ -24,6 +24,7 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import SupabaseVerifyView from "./supabase-verify-view";
 import axios from 'axios';
 
 // ----------------------------------------------------------------------
@@ -33,6 +34,7 @@ export default function SupabaseRegisterView() {
   const { register } = useAuthContext();
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [registrationComplete, setRegistrationComplete] = useState(false);
 
   const router = useRouter();
 
@@ -69,14 +71,8 @@ export default function SupabaseRegisterView() {
     try {
 
       await register?.(data.email, data.password, data.firstName, data.lastName);
+      setRegistrationComplete(true);
 
-      const searchParams = new URLSearchParams({
-        email: data.email,
-      }).toString();
-
-      const href = `${paths.auth.supabase.verify}?${searchParams}`;
-
-      router.push(href);
     } catch (error) {
       console.error(error);
       reset();
@@ -158,20 +154,19 @@ export default function SupabaseRegisterView() {
   );
 
   return (
-    <>
-      {renderHead}
-
-      {!!errorMsg && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {errorMsg}
-        </Alert>
-      )}
-
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        {renderForm}
-      </FormProvider>
-
-      {renderTerms}
-    </>
+      <>
+          {registrationComplete ? (
+              <SupabaseVerifyView />
+          ) : (
+              <>
+                  {renderHead}
+                  {!!errorMsg && <Alert severity="error" sx={{ mb: 3 }}>{errorMsg}</Alert>}
+                  <FormProvider methods={methods} onSubmit={onSubmit}>
+                      {renderForm}
+                  </FormProvider>
+                  {renderTerms}
+              </>
+          )}
+      </>
   );
 }

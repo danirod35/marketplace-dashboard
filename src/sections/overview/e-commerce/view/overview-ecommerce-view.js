@@ -81,9 +81,11 @@ export default function OverviewEcommerceView() {
         if (user.user_metadata.application_status === 'incomplete' || storeData.approval_status === 'pending') {
           router.push(paths.newUserApplication);
         } else if (!storeData.shopify_connection_status) {
+          setIsLoading(false);
+          setIsDashboardVisible(true);
           setOpenDialog(true);
-          setIsDashboardVisible(false); // Hide dashboard if Shopify connection is required
         } else {
+          setIsLoading(false);
           setIsDashboardVisible(true); // Show dashboard if everything is complete
         }
       } catch (error) {

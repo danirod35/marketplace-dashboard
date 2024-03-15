@@ -6,6 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Label from "../../components/label";
 import {alpha} from "@mui/material/styles";
+import {useAuthContext} from "../../auth/hooks";
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +60,22 @@ function PendingApplication({status}) {
 
 }
 
-function RejectedApplication({status}) {
+function RejectedApplication({status, rejectionMessage}) {
+
+    const { updateUserMetadata } = useAuthContext();
+
+    const handleReapplyNowButton = async () => {
+        const metadata = {
+            application_status: 'incomplete',
+        };
+
+        await updateUserMetadata?.(metadata);
+
+        console.log('in here')
+
+        // Refresh the page
+        window.location.reload();
+    };
 
     const renderContent = (
         <Stack
@@ -98,11 +114,11 @@ function RejectedApplication({status}) {
 
                 <Card sx={{ padding: '20px' }}>
                     <Typography variant="body1">
-                        Your application was missing a valid Tax ID. Please resubmit to be considered.
+                        {rejectionMessage}
                     </Typography>
                 </Card>
             </Stack>
-            <Button variant='contained'>Reapply Now</Button>
+            <Button onClick={handleReapplyNowButton} variant='contained'>Reapply Now</Button>
         </Stack>
     );
 
@@ -110,7 +126,7 @@ function RejectedApplication({status}) {
 
 }
 
-export default function ApplicationComplete({ approvalStatus }) {
+export default function ApplicationComplete({ approvalStatus, rejectionMessage }) {
 
     if (approvalStatus === 'pending') {
         return (
@@ -135,7 +151,7 @@ export default function ApplicationComplete({ approvalStatus }) {
                     bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
                 }}
             >
-                <RejectedApplication status={approvalStatus} />
+                <RejectedApplication status={approvalStatus} rejectionMessage={rejectionMessage} />
             </Paper>
         );
     }

@@ -1,6 +1,6 @@
 // ApplicationStepper.jsx
 import React, {useEffect, useState} from 'react';
-import { Stepper, Step, StepLabel, Container, Button } from '@mui/material';
+import { Stepper, Step, StepLabel, Container, Button, CircularProgress } from '@mui/material';
 import StoreInfo from "./store-info";
 import ShippingAndOperations from "./shipping-and-operations";
 import ApplicationConfirmation from "./application-confirmation";
@@ -13,11 +13,12 @@ import {PATH_AFTER_LOGIN} from "../../config-global";
 
 
 function ApplicationStepper() {
-    const { user, updateUser } = useAuthContext();
+    const {user, updateUser} = useAuthContext();
     const [activeStep, setActiveStep] = useState(0);
     const [store, setStore] = useState('');
-    const [storeStatus, setStoreStatus] = useState('')
-    const [storeId, setStoreId] = useState(null)
+    const [storeStatus, setStoreStatus] = useState('pending')
+    const [storeId, setStoreId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // Track loading state
     const router = useRouter();
     const [formValues, setFormValues] = useState({
         storeInfo: {},
@@ -34,9 +35,12 @@ function ApplicationStepper() {
                 console.log('user storedid', user.storeId)
                 const response = await axios.get(`http://localhost:3000/store/get/${user.storeId}`);
                 const storeData = response?.data[0]
+                setStore(storeData);
                 console.log('my store', response?.data[0])
                 console.log(storeData);
-                if (storeData.approval_status === 'pending') {
+                if (user.user_metadata.application_status === 'incomplete') {
+                    setActiveStep(0);
+                } else if (storeData.approval_status === 'pending') {
                     setActiveStep(3);
                     setStoreStatus('pending')
                 } else if (storeData.approval_status === 'rejected') {
@@ -47,6 +51,8 @@ function ApplicationStepper() {
                 }
             } catch (error) {
                 console.error('Error fetching store:', error);
+            } finally {
+                setIsLoading(false); // Set loading state to false after fetching store data
             }
         };
 
@@ -86,13 +92,17 @@ function ApplicationStepper() {
     const handleFinalSubmit = async (finalFormValues) => {
         try {
             console.log('user in stepper', user);
-            const myStoreId = generateStoreId()
-            setStoreId(myStoreId);
-            console.log('mystoreId', myStoreId);
-            finalFormValues.id = myStoreId;
-            // Call updateUserDetails function to update user details
-            await updateUser?.(user.id, myStoreId);
-
+            let myStoreId;
+            if (user.user_metadata.store_id !== undefined) {
+                myStoreId = user.user_metadata.store_id
+            } else {
+                myStoreId = generateStoreId()
+                setStoreId(myStoreId);
+                console.log('mystoreId', myStoreId);
+            }
+                finalFormValues.id = myStoreId;
+                // Call updateUserDetails function to update user details
+                await updateUser?.(user.id, myStoreId);
             // After updating user details, submit the form data to the server
             console.log('finalformvalues', finalFormValues);
             const response = await axios.post('http://localhost:3000/store/create', [finalFormValues]);
@@ -105,48 +115,60 @@ function ApplicationStepper() {
 
     return (
         <Container>
-            <Stepper activeStep={activeStep} alternativeLabel>
-                <Step>
-                    <StepLabel>Company Information</StepLabel>
-                </Step>
-                <Step>
-                    <StepLabel>Social Links</StepLabel>
-                </Step>
-                <Step>
-                    <StepLabel>Shipping and Operations</StepLabel>
-                </Step>
-                <Step completed={activeStep >= 3}>
-                    <StepLabel>Application Complete</StepLabel>
-                </Step>
-            </Stepper>
-            <div>
-                {activeStep === 0 && (
-                    <StoreInfo onNext={handleNext} setFormData={handleStepFormValues} formValues={formValues}/>
-                )}
-                {activeStep === 1 && (
-                    <SocialLinks
-                        onNext={handleNext}
-                        setFormData={handleStepFormValues}
-                        onBack={handleBack}
-                        onSubmitFinal={handleFinalSubmit}
-                        formValues={formValues} // Pass formValues to ShippingAndOperations
-                    />
-                )}
-                {activeStep === 2 && (
-                    <ShippingAndOperations
-                        onNext={handleNext}
-                        setFormData={handleStepFormValues}
-                        onBack={handleBack}
-                        onSubmitFinal={handleFinalSubmit}
-                        formValues={formValues} // Pass formValues to ShippingAndOperations
-                    />
-                )}
-                {activeStep === 3 && (
-                   <ApplicationConfirmation approvalStatus={storeStatus}/>
-                )}
-            </div>
+            {isLoading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+                    <CircularProgress />
+                </div>
+            ) : (
+                <Stepper activeStep={activeStep} alternativeLabel>
+                    {/* Steps */}
+                    <Step>
+                        <StepLabel>Company Information</StepLabel>
+                    </Step>
+                    <Step>
+                        <StepLabel>Social Links</StepLabel>
+                    </Step>
+                    <Step>
+                        <StepLabel>Shipping and Operations</StepLabel>
+                    </Step>
+                    <Step completed={activeStep >= 3}>
+                        <StepLabel>Application Complete</StepLabel>
+                    </Step>
+                </Stepper>
+            )}
+
+            {!isLoading && (
+                <div>
+                    {/* Conditional rendering based on activeStep */}
+                    {activeStep === 0 && (
+                        <StoreInfo onNext={handleNext} setFormData={handleStepFormValues} formValues={formValues}/>
+                    )}
+                    {activeStep === 1 && (
+                        <SocialLinks
+                            onNext={handleNext}
+                            setFormData={handleStepFormValues}
+                            onBack={handleBack}
+                            onSubmitFinal={handleFinalSubmit}
+                            formValues={formValues} // Pass formValues to ShippingAndOperations
+                        />
+                    )}
+                    {activeStep === 2 && (
+                        <ShippingAndOperations
+                            onNext={handleNext}
+                            setFormData={handleStepFormValues}
+                            onBack={handleBack}
+                            onSubmitFinal={handleFinalSubmit}
+                            formValues={formValues} // Pass formValues to ShippingAndOperations
+                        />
+                    )}
+                    {activeStep === 3 && (
+                        <ApplicationConfirmation approvalStatus={storeStatus} rejectionMessage={store.rejection_message}/>
+                    )}
+                </div>
+            )}
         </Container>
     );
 }
+
 
 export default ApplicationStepper;
