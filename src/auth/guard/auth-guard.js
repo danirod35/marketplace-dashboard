@@ -46,17 +46,21 @@ function Container({ children }) {
 
   const check = useCallback(() => {
     if (!authenticated) {
-      const searchParams = new URLSearchParams({
-        returnTo: window.location.pathname,
-      }).toString();
+      const { pathname, search } = window.location;
 
       const loginPath = loginPaths[method];
-      console.log('loginpath', loginPath);
-      console.log('method', method);
 
-      const href = `${loginPath}?${searchParams}`;
-      console.log('href', method);
+      const searchParams = new URLSearchParams();
+      searchParams.append('returnTo', `${pathname}${search}`);
 
+      // Get the shopId from the current URL
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const shopId = urlSearchParams.get('shopId');
+      if (shopId) {
+        searchParams.append('shopId', shopId);
+      }
+
+      const href = `${loginPath}?${searchParams.toString()}`;
       router.replace(href);
     } else {
       setChecked(true);

@@ -13,6 +13,10 @@ import {useAuthContext} from "../../auth/hooks";
 
 function PendingApplication({status}) {
 
+    const connectToShopify = () => {
+        window.top.location.href = `https://admin.shopify.com/store/quickstart-ef261c7c/apps/jan24-app/app/connect?status=true`;
+    };
+
     const renderContent = (
         <Stack
             spacing={5}
@@ -42,6 +46,10 @@ function PendingApplication({status}) {
                     </Label>
                 </Grid>
             </Grid>
+
+            <Button variant='contained' onClick={connectToShopify}>
+                Continue to Shopify to Select Billing
+            </Button>
 
             <Card sx={{ padding: '20px' }}>
                 <Typography variant='body1'>

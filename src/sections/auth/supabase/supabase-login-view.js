@@ -28,9 +28,10 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function SupabaseLoginView() {
-  const { login, user } = useAuthContext();
+  const { login, user, updateUserMetadata } = useAuthContext();
 
   const router = useRouter();
+  const [domain, setDomain] = useState(null); // State to store the shopId
 
   const [errorMsg, setErrorMsg] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -62,9 +63,31 @@ export default function SupabaseLoginView() {
     formState: { isSubmitting },
   } = methods;
 
+    useEffect(() => {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const extractedShopId = urlSearchParams.get('shopId');
+        if (extractedShopId) {
+            setDomain(extractedShopId);
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log('domain', domain)
+    }, [domain]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await login?.(data.email, data.password);
+
+      const metadata = {
+          domain: domain,
+      };
+
+      console.log('domain', domain)
+
+      if (domain !== null) {
+          await updateUserMetadata?.(metadata);
+      }
 
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
@@ -81,7 +104,7 @@ export default function SupabaseLoginView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2">New user?</Typography>
 
-        <Link component={RouterLink} href={paths.auth.supabase.register} variant="subtitle2">
+        <Link component={RouterLink} href={`${paths.auth.supabase.register}?shopId=${domain}`} variant="subtitle2">
           Create an account
         </Link>
       </Stack>

@@ -10,10 +10,19 @@ import Card from "@mui/material/Card";
 import {alpha} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 
-function StoreInfo({ onNext, setFormData, formValues }) {
+function StoreInfo({ onNext, onBack, setFormData, formValues }) {
     const methods = useForm({
         defaultValues: formValues.storeInfo, // Set default values from formValues
     });
+
+    const onSetFormData = (data) => {
+        setFormData({ socialLinks: data });
+    };
+
+    const handleBack = () => {
+        methods.handleSubmit(onSetFormData)();
+        onBack();
+    };
 
     const { handleSubmit, formState: { errors }, setValue } = methods;
     // Function to handle form submission for Step One
@@ -129,10 +138,15 @@ function StoreInfo({ onNext, setFormData, formValues }) {
                         </Grid>
                     </Grid>
                 </Paper>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button variant="contained" type="submit" disabled={Object.keys(errors).length !== 0}>
-                        Next
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Button variant="outlined" onClick={handleBack}>
+                        Back
                     </Button>
+                    <div style={{ textAlign: 'right' }}>
+                        <Button variant="contained" type="submit">
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </form>
         </FormProvider>

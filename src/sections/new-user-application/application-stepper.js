@@ -5,6 +5,7 @@ import StoreInfo from "./store-info";
 import ShippingAndOperations from "./shipping-and-operations";
 import ApplicationConfirmation from "./application-confirmation";
 import SocialLinks from "./social-links";
+import ChooseYourIntegration from "./choose-your-integration";
 import axios from 'axios';
 import {useAuthContext} from "../../auth/hooks";
 import {paths} from "../../routes/paths";
@@ -13,10 +14,12 @@ import {PATH_AFTER_LOGIN} from "../../config-global";
 
 
 function ApplicationStepper() {
-    const {user, updateUser} = useAuthContext();
+    const {user, updateUser, updateUserMetadata} = useAuthContext();
     const [activeStep, setActiveStep] = useState(0);
+    const [domain, setDomain] = useState(null); // State to store the shopId
     const [store, setStore] = useState('');
     const [storeStatus, setStoreStatus] = useState('pending')
+    const [shopifyConnectionStatus, setShopifyConnectionStatus] = useState(false);
     const [storeId, setStoreId] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // Track loading state
     const router = useRouter();
@@ -25,6 +28,32 @@ function ApplicationStepper() {
         shippingAndOperations: {},
         socialLinks: {},
     });
+
+    useEffect(() => {
+        const fetchShopIdAndSetMetadata = async () => {
+            try {
+                const urlSearchParams = new URLSearchParams(window.location.search);
+                const extractedShopId = urlSearchParams.get('shopId');
+
+                if (extractedShopId) {
+                    setDomain(extractedShopId);
+                    const metadata = { domain: extractedShopId };
+                    console.log('domain', extractedShopId);
+                    await updateUserMetadata?.(metadata);
+                    setShopifyConnectionStatus(true)
+                } else if (user.user_metadata.domain !== "null") {
+                    setShopifyConnectionStatus(true);
+                }
+            } catch (error) {
+                console.error('Error updating user metadata:', error);
+            } finally {
+                setIsLoading(false); // Set loading state to false after fetching store data
+            }
+        };
+
+        fetchShopIdAndSetMetadata();
+    }, []);
+
 
 
     useEffect(() => {
@@ -41,10 +70,10 @@ function ApplicationStepper() {
                 if (user.user_metadata.application_status === 'incomplete') {
                     setActiveStep(0);
                 } else if (storeData.approval_status === 'pending') {
-                    setActiveStep(3);
+                    setActiveStep(4);
                     setStoreStatus('pending')
                 } else if (storeData.approval_status === 'rejected') {
-                    setActiveStep(3);
+                    setActiveStep(4);
                     setStoreStatus('rejected')
                 } else if (storeData.approval_status === 'approved') {
                     router.push(PATH_AFTER_LOGIN);
@@ -101,6 +130,7 @@ function ApplicationStepper() {
                 console.log('mystoreId', myStoreId);
             }
                 finalFormValues.id = myStoreId;
+                finalFormValues.domain = user?.user_metadata?.domain;
                 // Call updateUserDetails function to update user details
                 await updateUser?.(user.id, myStoreId);
             // After updating user details, submit the form data to the server
@@ -123,6 +153,9 @@ function ApplicationStepper() {
                 <Stepper activeStep={activeStep} alternativeLabel>
                     {/* Steps */}
                     <Step>
+                        <StepLabel>Choose Your Integration</StepLabel>
+                    </Step>
+                    <Step>
                         <StepLabel>Company Information</StepLabel>
                     </Step>
                     <Step>
@@ -131,7 +164,7 @@ function ApplicationStepper() {
                     <Step>
                         <StepLabel>Shipping and Operations</StepLabel>
                     </Step>
-                    <Step completed={activeStep >= 3}>
+                    <Step completed={activeStep >= 4}>
                         <StepLabel>Application Complete</StepLabel>
                     </Step>
                 </Stepper>
@@ -141,9 +174,12 @@ function ApplicationStepper() {
                 <div>
                     {/* Conditional rendering based on activeStep */}
                     {activeStep === 0 && (
-                        <StoreInfo onNext={handleNext} setFormData={handleStepFormValues} formValues={formValues}/>
+                        <ChooseYourIntegration onNext={handleNext} setFormData={handleStepFormValues} formValues={formValues} shopifyConnectionStatus={shopifyConnectionStatus}/>
                     )}
                     {activeStep === 1 && (
+                        <StoreInfo onNext={handleNext} onBack={handleBack} setFormData={handleStepFormValues} formValues={formValues}/>
+                    )}
+                    {activeStep === 2 && (
                         <SocialLinks
                             onNext={handleNext}
                             setFormData={handleStepFormValues}
@@ -152,7 +188,7 @@ function ApplicationStepper() {
                             formValues={formValues} // Pass formValues to ShippingAndOperations
                         />
                     )}
-                    {activeStep === 2 && (
+                    {activeStep === 3 && (
                         <ShippingAndOperations
                             onNext={handleNext}
                             setFormData={handleStepFormValues}
@@ -161,8 +197,8 @@ function ApplicationStepper() {
                             formValues={formValues} // Pass formValues to ShippingAndOperations
                         />
                     )}
-                    {activeStep === 3 && (
-                        <ApplicationConfirmation approvalStatus={storeStatus} rejectionMessage={store.rejection_message}/>
+                    {activeStep === 4 && (
+                        <ApplicationConfirmation approvalStatus={storeStatus} rejectionMessage={store?.rejection_message}/>
                     )}
                 </div>
             )}

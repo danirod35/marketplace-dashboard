@@ -148,7 +148,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
+  const register = useCallback(async (email, password, firstName, lastName, domain) => {
     console.log('hi im in register in auth provider!')
     const { user, error } = await supabase.auth.signUp({
       email,
@@ -159,6 +159,7 @@ export function AuthProvider({ children }) {
           display_name: `${firstName} ${lastName}`,
           role: 'user',
           application_status: 'incomplete',
+          domain: domain
         },
       },
     });

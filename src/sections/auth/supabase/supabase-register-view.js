@@ -32,7 +32,7 @@ import axios from 'axios';
 export default function SupabaseRegisterView() {
 
   const { register } = useAuthContext();
-
+  const [domain, setDomain] = useState(null); // State to store the shopId
   const [errorMsg, setErrorMsg] = useState('');
   const [registrationComplete, setRegistrationComplete] = useState(false);
 
@@ -65,20 +65,29 @@ export default function SupabaseRegisterView() {
     formState: { isSubmitting },
   } = methods;
 
+    useEffect(() => {
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const extractedShopId = urlSearchParams.get('shopId');
+        if (extractedShopId) {
+            setDomain(extractedShopId);
+        }
+    }, []);
 
 
     const onSubmit = handleSubmit(async (data) => {
-    try {
+        try {
 
-      await register?.(data.email, data.password, data.firstName, data.lastName);
-      setRegistrationComplete(true);
+          await register?.(data.email, data.password, data.firstName, data.lastName, domain);
 
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
+          setRegistrationComplete(true);
+
+        } catch (error) {
+          console.error(error);
+          reset();
+          setErrorMsg(typeof error === 'string' ? error : error.message);
+        }
   });
+
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
@@ -87,7 +96,7 @@ export default function SupabaseRegisterView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
 
-        <Link href={paths.auth.supabase.login} component={RouterLink} variant="subtitle2">
+        <Link href={`${paths.auth.supabase.login}?shopId=${domain}`} component={RouterLink} variant="subtitle2">
           Sign in
         </Link>
       </Stack>
